@@ -1,4 +1,5 @@
-﻿using System;
+﻿using minic.Class;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +16,8 @@ namespace minic
         // ----------------------------------------VAR GLOBAL-------------------------------------------
 
         public string PathFile = string.Empty; // var path the file
+
+        //----------------------------------------- INTERFACE -----------------------------------------
 
         public Form1()
         {
@@ -68,6 +71,58 @@ namespace minic
 
             textBox1.Text = PathFile;
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Lexical_Analysis(); //begin
+        }
+
+        //---------------------------------------FUNCTIONS PUBLIC---------------------------------------
+
+        #region Functions Public
+
+        //method to do Lexical Analysis
+        public void Lexical_Analysis()
+        {
+            //instance class
+            ReadFileC rf = new ReadFileC();
+            Token t = new Token();
+
+            //return config start
+            button2.Enabled = false;
+            textBox1.Enabled = false;
+
+            //get data from the all file
+            string[] res = rf.ReadFile(PathFile);
+
+            if (res.Length == 0)
+            {
+                MessageBox.Show("El archivo se encontro vacio."); //end program
+            }
+            else
+            {
+                //method for analysis
+
+                //codigo basura
+               /* List<string> reserved = t.Reserved_Words();
+                foreach (var item in reserved)
+                {
+                    MessageBox.Show(item);
+                }*/ 
+
+
+            }
+
+        }
+
+
+        #endregion
+
+        //---------------------------------------FUNCTIONS PRIVATE--------------------------------------
+
+        #region Functions Private
+
+        #endregion
 
 
     }
