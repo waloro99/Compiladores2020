@@ -25,6 +25,11 @@ namespace minic.Class
 
         #endregion
 
+
+        #region WriteFile
+
+        #endregion
+
         //---------------------------------------FUNCTIONS PRIVATE---------------------------------------
 
     }

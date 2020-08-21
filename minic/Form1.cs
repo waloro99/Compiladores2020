@@ -58,6 +58,7 @@ namespace minic
 
         }
 
+        //button buscar
         private void button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -72,6 +73,7 @@ namespace minic
             textBox1.Text = PathFile;
         }
 
+        //buton Aceptar
         private void button2_Click(object sender, EventArgs e)
         {
             Lexical_Analysis(); //begin
@@ -87,6 +89,7 @@ namespace minic
             //instance class
             ReadFileC rf = new ReadFileC();
             Token t = new Token();
+            Scanner s = new Scanner();
 
             //return config start
             button2.Enabled = false;
@@ -95,6 +98,7 @@ namespace minic
             //get data from the all file
             string[] res = rf.ReadFile(PathFile);
 
+            //check if it is empty
             if (res.Length == 0)
             {
                 MessageBox.Show("El archivo se encontro vacio."); //end program
@@ -102,13 +106,17 @@ namespace minic
             else
             {
                 //method for analysis
+                List<string> FileScanner = new List<string>();
+                FileScanner = s.Scanner_Lexic(res);
+                
+                
 
                 //codigo basura
-               /* List<string> reserved = t.Reserved_Words();
+                /*List<string> reserved = t.Operators_Words();
                 foreach (var item in reserved)
                 {
                     MessageBox.Show(item);
-                }*/ 
+                }*/
 
 
             }
