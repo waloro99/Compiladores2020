@@ -13,6 +13,7 @@ namespace minic.Class
         public int linea { get; set; } //line in the file
         public int column_I { get; set; } //first column
         public int column_F { get; set; } //last column
+        public string Error { get; set; } //if exist a error
 
     }
 }

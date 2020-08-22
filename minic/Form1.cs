@@ -106,7 +106,7 @@ namespace minic
             else
             {
                 //method for analysis
-                List<string> FileScanner = new List<string>();
+                List<Class.Type> FileScanner = new List<Class.Type>();
                 FileScanner = s.Scanner_Lexic(res);
                 
                 
