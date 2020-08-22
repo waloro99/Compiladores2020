@@ -51,17 +51,15 @@ namespace minic.Class
         //method for first filter, parameters words and line
         private void Filter_First(string[] word, int line)
         {
-            //scroll the array character by character
+            //scroll the array word by word
             for (int i = 0; i < word.Length; i++)
             {
-                //type
-                if (Regex.IsMatch(word[i], @""))
-                {
 
-                }
             }
-
         }
+
+
+        //method fo
 
         #endregion
 
