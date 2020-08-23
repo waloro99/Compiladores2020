@@ -43,7 +43,15 @@ namespace minic.Class
                 //separate the words
                 string[] word = Regex.Split(file[i], " ");
                 row++; //the line increment 
-                Filter_First(word, row);
+                //check if it is not comment or string
+                if (Is_Line(file[i]))
+                {
+
+                }
+                else
+                {
+                    Filter_First(word, row);
+                }             
                 column = 1; //restart
             }
 
@@ -105,7 +113,6 @@ namespace minic.Class
                 }
             }
         }
-
 
         //method for Second Filter, only words
         private void Second_Filter(string word, int line)
@@ -169,8 +176,12 @@ namespace minic.Class
 
         }
 
+        //method to know if it is necessary to analyze by line
+        private bool Is_Line(string line)
+        {
 
-
+            return false;
+        }
 
         #endregion
 
