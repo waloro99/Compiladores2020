@@ -16,11 +16,11 @@ namespace minic.Class
 
         //List for save data the lexic analysis
         public List<Type> NewFile = new List<Type>();
-        public int column = 0;
+        public int column = 1;
         public int row = 0;
 
         //method public for scanner the file
-        public List<Type> Scanner_Lexic(string[] file )
+        public List<Type> Scanner_Lexic(string[] file)
         {
             //scrolll the array
             Scanner_Private(file);
@@ -41,9 +41,10 @@ namespace minic.Class
             {
                 //separate the lines
                 //separate the words
-                string[] word = Regex.Split(file[i]," ");
-                row ++; //the line increment 
-                Filter_First(word,row);
+                string[] word = Regex.Split(file[i], " ");
+                row++; //the line increment 
+                Filter_First(word, row);
+                column = 1; //restart
             }
 
         }
@@ -62,34 +63,55 @@ namespace minic.Class
                 if (Regex.IsMatch(word[i], @"^[a-z A-Z]+$"))
                 {
                     //if not is reserved word
-                    if (!Is_ReservedWord(word[i],line))
+                    if (!Is_ReservedWord(word[i], line))
                     {
-                        //es un identificador
+                        //if is a constant boolean
+                        if (Regex.IsMatch(word[i], @"^(true|false)$"))
+                        {
+                            //is a bool
+                            Insert_Word(word[i], line, "Bool: " + word[i]);
+                        }
+                        else
+                        {
+                            //is a identifier
+                            Insert_Word(word[i], line, "Identifier");
+                        }
                     }
+
                 }
                 //only numbers --> decimal constant
                 else if (Regex.IsMatch(word[i], @"^[0-9]+$"))
                 {
-
+                    Insert_Word(word[i], line, "Value Int: " + word[i]);
                 }
                 //only operator (1)
-                else if (Regex.IsMatch(word[i], @"^["+operators+"]$"))
+                else if (Regex.IsMatch(word[i], @"^[" + operators + "]$")) //----------------> posible esta mala verificar-
                 {
-
+                    Insert_Word(word[i], line, "Operator: " + word[i]);
                 }
                 //numbers and letters
                 else if (Regex.IsMatch(word[i], @"^[0-9 a-z A-Z]+$"))
                 {
-
+                    //hexadecimal constant
+                    if (Regex.IsMatch(word[i], @"^(0x|0X)[0-9]+[a-zA-Z]*$"))
+                    {
+                        Insert_Word(word[i], line, "Value Hexadecimal: " + word[i]);
+                    }
                 }
                 //other case
                 else
                 {
-
+                    Second_Filter(word[i], line);
                 }
             }
         }
 
+
+        //method for Second Filter, only words
+        private void Second_Filter(string word, int line)
+        {
+
+        }
 
         //method for array the operator / array the reserved word
         private string Operator_A(List<string> o)
@@ -112,19 +134,43 @@ namespace minic.Class
 
             if (Regex.IsMatch(w, @"^(" + reserved + ")$"))
             {
-                Insert_Word(w,line,"Palabra Reservada");
+                Insert_Word(w, line, "Reserved word");
                 return true;
             }
             else
                 return false;
         }
 
+        //method to know if it is a string constant
+        private bool Is_String(string w, int line)
+        {
+            if (Regex.IsMatch(w, @"^")) //-----------------------------> Falta hacer expresion regular
+            {
+                Insert_Word(w, line, "Constant String");
+                return true;
+            }
+            else
+                return false;
+        }
 
         //method for insert in list type
         private void Insert_Word(string word, int line, string type)
         {
-            //insertar en la lista de tipo TYPE
+            //insert into TYPE list
+            Type newType = new Type();
+            newType.cadena = word;
+            newType.linea = line;
+            newType.Error = ""; //dont exist error
+            newType.column_I = column;
+            column = column + (word.Length - 1);
+            newType.column_F = column;
+            column = column +2; //space + next character
+            NewFile.Add(newType);
+
         }
+
+
+
 
         #endregion
 
