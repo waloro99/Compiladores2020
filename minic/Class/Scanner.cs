@@ -87,7 +87,7 @@ namespace minic.Class
                 //only numbers --> decimal constant
                 else if (Regex.IsMatch(word[i], @"^[0-9]+$"))
                 {
-                    Insert_Word(word[i], line, "Value Int: " + word[i]);
+                    Insert_Word(word[i], line, "T_IntConstant (value = " + word[i] + ")");
                 }
                 //only operator (1)
                 else if (Regex.IsMatch(word[i], @"^[" + operators + "]$")) //----------------> posible esta mala verificar-
@@ -100,7 +100,7 @@ namespace minic.Class
                     //hexadecimal constant
                     if (Regex.IsMatch(word[i], @"^(0x|0X)[0-9]+[a-zA-Z]*$"))
                     {
-                        Insert_Word(word[i], line, "Value Hexadecimal: " + word[i]);
+                        Insert_Word(word[i], line, "T_Hexadecimal: (value = " + word[i] + ")");
                     }
                 }
                 //other case
@@ -185,7 +185,7 @@ namespace minic.Class
         {
             if (Regex.IsMatch(w, @"^")) //-----------------------------> Falta hacer expresion regular
             {
-                Insert_Word(w, line, "Constant String");
+                Insert_Word(w, line, "T_StringConst");
                 return true;
             }
             else
