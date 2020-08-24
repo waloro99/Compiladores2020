@@ -16,6 +16,7 @@ namespace minic.Class
 
         //List for save data the lexic analysis
         public List<Type> NewFile = new List<Type>();
+        Token t = new Token(); //call the tokens
         public int column = 1;
         public int row = 0;
 
@@ -58,7 +59,6 @@ namespace minic.Class
         private void Filter_First(string[] word, int line)
         {
             //call the tokens
-            Token t = new Token();
             List<string> ope = t.Operators_Words();
             string operators = Operator_A(ope);
             //scroll the array word by word
@@ -168,13 +168,12 @@ namespace minic.Class
         private bool Is_ReservedWord(string w, int line)
         {
             //call the tokens
-            Token t = new Token();
             List<string> reser = t.Reserved_Words();
             string reserved = Operator_A(reser);
 
             if (Regex.IsMatch(w, @"^(" + reserved + ")$"))
             {
-                Insert_Word(w, line, "Reserved word");
+                Insert_Word(w, line, "T_" + w);
                 return true;
             }
             else
