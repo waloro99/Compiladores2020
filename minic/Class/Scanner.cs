@@ -46,7 +46,7 @@ namespace minic.Class
                 //check if it is not comment or string
                 string type_line = Is_Line(file[i]);
                 if (type_line != "")
-                    Scanner_Line(file[i],row,type_line); //filter the commentary and string, string the line complete
+                    Scanner_Line(file[i], row, type_line); //filter the commentary and string, string the line complete
                 else
                     Filter_First(word, row); //first filter for word by word, array the word          
                 column = 1; //restart
@@ -118,15 +118,34 @@ namespace minic.Class
         }
 
         //method for scanner line, because exist commentary or string or both
-        private void Scanner_Line(string word, int line,string type) //type-->string or commentary
+        private void Scanner_Line(string word, int line, string type) //type-->string or commentary
         {
             //depend the case 
             switch (type)
             {
                 case "string":
-
+                    //check that the string has the correct format
+                    string flag_strig = Is_CorrectString(word, line); // --> bad method
                     break;
                 case "commentary":
+                    //check that the commentary has the correct format
+                    char[] Word_A = word.ToArray();
+                    string before_Comment = "";
+                    int i = 0;
+                    while (Word_A[i] != '/' && Word_A[i + 1] != '/')
+                    {
+                        before_Comment = before_Comment + Word_A[i];
+                        i++;
+                    }
+                    //call the method for analisys the string before
+                    //insert 
+                    Type newType = new Type();
+                    newType.cadena = "//...";
+                    newType.linea = line;
+                    newType.Error = ""; //dont exist error
+                    newType.column_I = i+1; //initial in zero
+                    newType.column_F = Word_A.Length - i; //all the line after the '//'
+                    NewFile.Add(newType);
                     break;
                 case "commentary2":
                     break;
@@ -186,7 +205,7 @@ namespace minic.Class
             newType.column_I = column;
             column = column + (word.Length - 1);
             newType.column_F = column;
-            column = column +2; //space + next character
+            column = column + 2; //space + next character
             NewFile.Add(newType);
 
         }
@@ -202,15 +221,48 @@ namespace minic.Class
                 if (array_line[i] == '"')
                     return "string";
                 //if is a line commentary
-                else if (array_line[i] == '/' && array_line[i+1] == '/')
+                else if (array_line[i] == '/' && array_line[i + 1] == '/')
                     return "commentary";
                 //if is a begin commentary
-                else if (array_line[i] == '/' && array_line[i+1] == '*')
+                else if (array_line[i] == '/' && array_line[i + 1] == '*')
                     return "commentary2";
             }
 
             return "";
         }
+
+        //method for check that the string has the correct format
+        private string Is_CorrectString(string line, int linea) //characters
+        {
+            string I_string = ""; //before the string
+            string F_string = ""; //after the string
+            string N_string = "";
+            bool flag_I = false;
+            bool flag_F = false;
+            //scroll the line
+            char[] Line_A = line.ToArray();
+            for (int i = 0; i < Line_A.Length; i++)
+            {
+                if (flag_I == false && Line_A[i] != '"')//before
+                {
+                    I_string = I_string + Line_A[i];
+                }
+                else if (flag_I == false && Line_A[i] == '"')//now
+                {
+                    flag_I = true;//delete flag
+                    N_string = N_string + Line_A[i];
+                }
+                else if (flag_I == true && flag_F == false )
+                {
+
+                }
+            }
+            return null;
+
+            //ESTE METODO ESTA MALO HAY QUE CAMBIARLO 
+            // hay que tomar como ejemplo una cadena de este tipo --> string c = "hola" + "mundo";
+        }
+
 
         #endregion
 
