@@ -14,6 +14,12 @@ namespace minic.Class
         public int column_I { get; set; } //first column
         public int column_F { get; set; } //last column
         public string Error { get; set; } //if exist a error
+        public string descrption{ get; set; }
 
+        public override string ToString()
+        {
+
+            return "";
+        }
     }
 }

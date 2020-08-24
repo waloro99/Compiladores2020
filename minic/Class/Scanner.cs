@@ -74,7 +74,7 @@ namespace minic.Class
                         if (Regex.IsMatch(word[i], @"^(true|false)$"))
                         {
                             //is a bool
-                            Insert_Word(word[i], line, "Bool: " + word[i]);
+                            Insert_Word(word[i], line, "T_Bool: " + word[i]);
                         }
                         else
                         {
@@ -90,7 +90,7 @@ namespace minic.Class
                     Insert_Word(word[i], line, "T_IntConstant (value = " + word[i] + ")");
                 }
                 //only operator (1)
-                else if (Regex.IsMatch(word[i], @"^[" + operators + "]$")) //----------------> posible esta mala verificar-
+                else if (Regex.IsMatch(word[i], @"^" + operators +"$")) //----------------> posible esta mala verificar-
                 {
                     Insert_Word(word[i], line, "Operator: " + word[i]);
                 }
@@ -98,7 +98,7 @@ namespace minic.Class
                 else if (Regex.IsMatch(word[i], @"^[0-9 a-z A-Z]+$"))
                 {
                     //hexadecimal constant
-                    if (Regex.IsMatch(word[i], @"^(0x|0X)[0-9]+[a-zA-Z]*$"))
+                    if (Regex.IsMatch(word[i], @"^(0x|0X)[0-9]+[a-fA-F]*$"))
                     {
                         Insert_Word(word[i], line, "T_Hexadecimal: (value = " + word[i] + ")");
                     }
@@ -159,7 +159,7 @@ namespace minic.Class
         {
             string res = string.Empty;
             foreach (var item in o)
-                res = res + "|" + item;
+                res += "|[" + item + "]";
 
             return res.TrimStart('|');
         }
@@ -204,6 +204,7 @@ namespace minic.Class
             column = column + (word.Length - 1);
             newType.column_F = column;
             column = column + 2; //space + next character
+            newType.descrption = type;
             NewFile.Add(newType);
 
         }
