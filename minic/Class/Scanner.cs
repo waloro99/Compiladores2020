@@ -79,7 +79,7 @@ namespace minic.Class
                         else
                         {
                             //is a identifier
-                            Insert_Word(word[i], line, "Identifier");
+                            Insert_Word(word[i], line, "T_Identifier");
                         }
                     }
                 }
@@ -87,21 +87,37 @@ namespace minic.Class
                 //only numbers --> decimal constant
                 else if (Regex.IsMatch(word[i], @"^[0-9]+$"))
                 {
-                    Insert_Word(word[i], line, "T_IntConstant (value = " + word[i] + ")");
+                    Insert_Word(word[i], line, "T_IntConst (value = " + word[i] + ")");
+                }
+                else if (Regex.IsMatch(word[i], @"^[0-9]+[.](([0-9]*)([E|e][+|-]?[0-9]+)?)$")) //double consts or exp numbers
+                {
+                    if (Regex.IsMatch(word[i], @"^[0-9]+[.]([0-9]+)$")) //Only double, with decimal
+                    {
+                        Insert_Word(word[i], line, "T_DoubleConst (value = " + word[i] + ")");
+                    }
+                    else if(Regex.IsMatch(word[i], @"^[0-9]+[.]$")) //without decimals
+                    {
+                        Insert_Word(word[i], line, "T_DoubleConst (value = " + word[i] + "00)");
+                    }
+                    else if(Regex.IsMatch(word[i], @"^[0-9]+[.](([0-9]*)([E|e][0-9]+)?)$"))
+                    {
+                        Insert_Word(word[i], line, "T_DoubleExpConst (value = " + word[i].Split('E')[0] + "E+" + word[i].Split('E')[1] + ")");
+                    }
+                    else
+                    {
+                        Insert_Word(word[i], line, "T_DoubleExpConst (value = " + word[i] + ")");
+                    }
+                    
                 }
                 //only operator (1)
-                else if (Regex.IsMatch(word[i], @"^" + operators +"$")) //----------------> posible esta mala verificar-
+                else if (Regex.IsMatch(word[i], @"^" + operators +"$"))
                 {
-                    Insert_Word(word[i], line, "Operator: " + word[i]);
+                    Insert_Word(word[i], line, "T_Operator");
                 }
                 //numbers and letters
-                else if (Regex.IsMatch(word[i], @"^[0-9 a-z A-Z]+$"))
+                else if (Regex.IsMatch(word[i], @"^(0x|0X)[0-9]+[a-fA-F]*$"))
                 {
-                    //hexadecimal constant
-                    if (Regex.IsMatch(word[i], @"^(0x|0X)[0-9]+[a-fA-F]*$"))
-                    {
-                        Insert_Word(word[i], line, "T_Hexadecimal: (value = " + word[i] + ")");
-                    }
+                    Insert_Word(word[i], line, "T_Hexadecimal: (value = " + word[i] + ")");
                 }
                 //other case
                 else
@@ -205,6 +221,7 @@ namespace minic.Class
             newType.column_F = column;
             column = column + 2; //space + next character
             newType.description = type;
+            var prueba = newType.ToString();
             NewFile.Add(newType);
 
         }

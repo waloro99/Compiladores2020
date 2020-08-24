@@ -18,12 +18,7 @@ namespace minic.Class
 
         public override string ToString()
         {
-            var line = string.Empty;
-            line = cadena;
-            line += "\t\tline " + linea;
-            line += " cols " + column_I + " " + column_F;
-            line += " is " + description;
-            return line;
+            return $"{cadena}\t\tline {linea} cols {column_I}-{column_F} is {description}";
         }
     }
 }
