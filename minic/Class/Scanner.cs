@@ -44,14 +44,11 @@ namespace minic.Class
                 string[] word = Regex.Split(file[i], " ");
                 row++; //the line increment 
                 //check if it is not comment or string
-                if (Is_Line(file[i]))
-                {
-
-                }
+                string type_line = Is_Line(file[i]);
+                if (type_line != "")
+                    Scanner_Line(file[i],row,type_line); //filter the commentary and string, string the line complete
                 else
-                {
-                    Filter_First(word, row);
-                }             
+                    Filter_First(word, row); //first filter for word by word, array the word          
                 column = 1; //restart
             }
 
@@ -117,7 +114,25 @@ namespace minic.Class
         //method for Second Filter, only words
         private void Second_Filter(string word, int line)
         {
+            //empty
+        }
 
+        //method for scanner line, because exist commentary or string or both
+        private void Scanner_Line(string word, int line,string type) //type-->string or commentary
+        {
+            //depend the case 
+            switch (type)
+            {
+                case "string":
+
+                    break;
+                case "commentary":
+                    break;
+                case "commentary2":
+                    break;
+                default:
+                    break;
+            }
         }
 
         //method for array the operator / array the reserved word
@@ -177,10 +192,24 @@ namespace minic.Class
         }
 
         //method to know if it is necessary to analyze by line
-        private bool Is_Line(string line)
+        private string Is_Line(string line)
         {
+            char[] array_line = line.ToArray(); //line character by character
+            //scroll the array
+            for (int i = 0; i < array_line.Length; i++)
+            {
+                //if is a string
+                if (array_line[i] == '"')
+                    return "string";
+                //if is a line commentary
+                else if (array_line[i] == '/' && array_line[i+1] == '/')
+                    return "commentary";
+                //if is a begin commentary
+                else if (array_line[i] == '/' && array_line[i+1] == '*')
+                    return "commentary2";
+            }
 
-            return false;
+            return "";
         }
 
         #endregion
