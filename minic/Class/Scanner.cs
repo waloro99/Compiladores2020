@@ -82,8 +82,8 @@ namespace minic.Class
                             Insert_Word(word[i], line, "Identifier");
                         }
                     }
-
                 }
+                
                 //only numbers --> decimal constant
                 else if (Regex.IsMatch(word[i], @"^[0-9]+$"))
                 {
@@ -157,12 +157,11 @@ namespace minic.Class
         //method for array the operator / array the reserved word
         private string Operator_A(List<string> o)
         {
-            string res = "";
+            string res = string.Empty;
             foreach (var item in o)
                 res = res + "|" + item;
 
-            res = res.TrimStart('|');
-            return res;
+            return res.TrimStart('|');
         }
 
         //method to know if it is a reserved word

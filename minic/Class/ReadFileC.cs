@@ -16,11 +16,9 @@ namespace minic.Class
         //Method read file and save
         public string[] ReadFile(string PathF)
         {
-            string NameFile = @"" + PathF; //path the file
-            StreamReader read = new StreamReader(NameFile); //reader
+            StreamReader read = new StreamReader(PathF); //reader
             var txtAll = read.ReadToEnd(); //have all text
-            string[] T_Lineas = txtAll.Split(new[] { "\n\r", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries); //split line
-            return T_Lineas; //test function
+            return txtAll.Split(new[] { "\n\r", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries); //split line
         }
 
         #endregion

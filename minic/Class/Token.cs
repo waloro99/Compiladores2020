@@ -23,15 +23,13 @@ namespace minic.Class
         //method public that return the token reserved words
         public List<string> Reserved_Words()
         {
-            List<string> res = Reserved_Method();
-            return res;
+            return Reserved_Method();
         }
 
         //method public that return the token reserved words
         public List<string> Operators_Words()
         {
-            List<string> res = Operators_Method();
-            return res;
+            return Operators_Method();
         }
 
         #endregion

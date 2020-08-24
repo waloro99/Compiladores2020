@@ -53,11 +53,6 @@ namespace minic
 
         #endregion
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         //button buscar
         private void button1_Click(object sender, EventArgs e)
         {
