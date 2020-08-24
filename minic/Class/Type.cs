@@ -14,12 +14,16 @@ namespace minic.Class
         public int column_I { get; set; } //first column
         public int column_F { get; set; } //last column
         public string Error { get; set; } //if exist a error
-        public string descrption{ get; set; }
+        public string description{ get; set; }
 
         public override string ToString()
         {
-
-            return "";
+            var line = string.Empty;
+            line = cadena;
+            line += "\t\tline " + linea;
+            line += " cols " + column_I + " " + column_F;
+            line += " is " + description;
+            return line;
         }
     }
 }

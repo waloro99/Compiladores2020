@@ -123,7 +123,7 @@ namespace minic
         //---------------------------------------FUNCTIONS PRIVATE--------------------------------------
 
         #region Functions Private
-
+        
         #endregion
 
 

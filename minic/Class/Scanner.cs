@@ -204,7 +204,7 @@ namespace minic.Class
             column = column + (word.Length - 1);
             newType.column_F = column;
             column = column + 2; //space + next character
-            newType.descrption = type;
+            newType.description = type;
             NewFile.Add(newType);
 
         }
