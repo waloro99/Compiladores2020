@@ -20,6 +20,16 @@ namespace minic.Class
         public int column = 1;
         public int row = 0;
 
+        //Patterns
+        private string onlyLetters = @"^[a-z A-Z]+$";
+        private string boolPattern = @"^(true|false)$";
+        private string decimalConst = @"^[0-9]+$";
+        private string doubleGeneral = @"^[0-9]+[.](([0-9]*)([E|e][+|-]?[0-9]+)?)$"; //double or Exp
+        private string doubleFloat = @"^[0-9]+[.]([0-9]+)$"; //double with '.' and decimal numbers
+        private string doubleFloat2 = @"^[0-9]+[.]$"; //double without decimal numbers
+        private string expS = @"^[0-9]+[.](([0-9]*)([E|e][0-9]+)?)$"; //Exp without '+-' simbols
+        private string hexaDecimal = @"^(0x|0X)[0-9]+[a-fA-F]*$";
+
         //method public for scanner the file
         public List<Type> Scanner_Lexic(string[] file)
         {
@@ -65,13 +75,13 @@ namespace minic.Class
             for (int i = 0; i < word.Length; i++)
             {
                 //only letters
-                if (Regex.IsMatch(word[i], @"^[a-z A-Z]+$"))
+                if (Regex.IsMatch(word[i], onlyLetters))
                 {
                     //if not is reserved word
                     if (!Is_ReservedWord(word[i], line))
                     {
                         //if is a constant boolean
-                        if (Regex.IsMatch(word[i], @"^(true|false)$"))
+                        if (Regex.IsMatch(word[i], boolPattern))
                         {
                             //is a bool
                             Insert_Word(word[i], line, "T_Bool: " + word[i]);
@@ -85,21 +95,21 @@ namespace minic.Class
                 }
                 
                 //only numbers --> decimal constant
-                else if (Regex.IsMatch(word[i], @"^[0-9]+$"))
+                else if (Regex.IsMatch(word[i], decimalConst))
                 {
                     Insert_Word(word[i], line, "T_IntConst (value = " + word[i] + ")");
                 }
-                else if (Regex.IsMatch(word[i], @"^[0-9]+[.](([0-9]*)([E|e][+|-]?[0-9]+)?)$")) //double consts or exp numbers
+                else if (Regex.IsMatch(word[i], doubleGeneral )) //double consts or exp numbers
                 {
-                    if (Regex.IsMatch(word[i], @"^[0-9]+[.]([0-9]+)$")) //Only double, with decimal
+                    if (Regex.IsMatch(word[i], doubleFloat)) //Only double, with decimal
                     {
                         Insert_Word(word[i], line, "T_DoubleConst (value = " + word[i] + ")");
                     }
-                    else if(Regex.IsMatch(word[i], @"^[0-9]+[.]$")) //without decimals
+                    else if(Regex.IsMatch(word[i], doubleFloat2)) //without decimals
                     {
                         Insert_Word(word[i], line, "T_DoubleConst (value = " + word[i] + "00)");
                     }
-                    else if(Regex.IsMatch(word[i], @"^[0-9]+[.](([0-9]*)([E|e][0-9]+)?)$"))
+                    else if(Regex.IsMatch(word[i], expS)) //Exp without '+-'
                     {
                         Insert_Word(word[i], line, "T_DoubleExpConst (value = " + word[i].Split('E')[0] + "E+" + word[i].Split('E')[1] + ")");
                     }
@@ -115,7 +125,7 @@ namespace minic.Class
                     Insert_Word(word[i], line, "T_Operator");
                 }
                 //numbers and letters
-                else if (Regex.IsMatch(word[i], @"^(0x|0X)[0-9]+[a-fA-F]*$"))
+                else if (Regex.IsMatch(word[i], hexaDecimal))
                 {
                     Insert_Word(word[i], line, "T_Hexadecimal: (value = " + word[i] + ")");
                 }
@@ -130,7 +140,8 @@ namespace minic.Class
         //method for Second Filter, only words
         private void Second_Filter(string word, int line)
         {
-            //empty
+            var obj = new Filter();
+            obj.filter2(word, line); //Temporal
         }
 
         //method for scanner line, because exist commentary or string or both
