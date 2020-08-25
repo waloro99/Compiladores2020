@@ -76,7 +76,7 @@ namespace minic.Class
             {
                 //only letters
                 if (Regex.IsMatch(word[i], onlyLetters))
-                {
+                { 
                     //if not is reserved word
                     if (!Is_ReservedWord(word[i], line))
                     {
@@ -120,7 +120,7 @@ namespace minic.Class
                     
                 }
                 //only operator (1)
-                else if (Regex.IsMatch(word[i], @"^" + operators +"$"))
+                else if (Regex.IsMatch(word[i], @"(" + operators +")$") && word[i].Length <= 2)
                 {
                     Insert_Word(word[i], line, "T_Operator");
                 }
@@ -140,8 +140,24 @@ namespace minic.Class
         //method for Second Filter, only words
         private void Second_Filter(string word, int line)
         {
-            var obj = new Filter();
-            obj.filter2(word, line); //Temporal
+            var copy = word;
+
+            var reserved = Operator_A(t.Reserved_Words()).Replace("[","").Replace("]","");
+            var listReserved = Regex.Matches(copy, @"(" + reserved + ")"); //Se obtienen las palabras reservadas
+            RemoveRecurrence(ref copy, listReserved);
+
+            var operators1 = Operator_SecondFilter(t.Operators_Words(), 1);
+            var listOperators = Regex.Matches(copy, @""+ operators1 +""); //Operadores dobles como == != () {} <= >=
+            RemoveRecurrence(ref copy, listOperators);
+
+            var operators2 = Operator_SecondFilter(t.Operators_Words(), 2);
+            var listOperators2 = Regex.Matches(copy, @"" + operators2 + ""); //Operadores simples como = , . ! < > { } ( )
+            RemoveRecurrence(ref copy, listOperators2);
+
+            var listOnlyWords = Regex.Matches(copy, @"[a-z A-Z]*"); //Palabras
+
+            //Falta los doubles, que van antes de buscar match con palabras solas
+
         }
 
         //method for scanner line, because exist commentary or string or both
@@ -179,16 +195,6 @@ namespace minic.Class
                 default:
                     break;
             }
-        }
-
-        //method for array the operator / array the reserved word
-        private string Operator_A(List<string> o)
-        {
-            string res = string.Empty;
-            foreach (var item in o)
-                res += "|[" + item + "]";
-
-            return res.TrimStart('|');
         }
 
         //method to know if it is a reserved word
@@ -232,7 +238,6 @@ namespace minic.Class
             newType.column_F = column;
             column = column + 2; //space + next character
             newType.description = type;
-            var prueba = newType.ToString();
             NewFile.Add(newType);
 
         }
@@ -290,7 +295,100 @@ namespace minic.Class
             // hay que tomar como ejemplo una cadena de este tipo --> string c = "hola" + "mundo";
         }
 
+        //method for array the operator / array the reserved word
+        private string Operator_A(List<string> o)
+        {
+            string res = string.Empty;
+            foreach (var item in o)
+                res += "|[" + item + "]";
 
+            return res.TrimStart('|');
+        }
+
+        private string Operator_SecondFilter(List<string> o, int group)
+        {
+            string res = string.Empty;
+
+            switch (group)
+            {
+                case 1:
+                    foreach (var item1 in o)
+                        if (item1 == "||")
+                        {
+                            res += "|" + "(\\|\\|)";
+                        }
+                        else if (item1 == "[]")
+                        {
+                            res += "|" + "\\[\\]";
+                        }
+                        else if (item1 == "()")
+                        {
+                            res += "|" + "\\(\\)";
+                        }
+                        else if (item1 == "{}")
+                        {
+                            res += "|" + "\\{\\}";
+                        }
+                        else if (item1 == "==" || item1 == ">=" || item1 == "<=" || item1 == "!=" || item1 == "&&" || item1 == "")
+                        {
+                            res += "|" + item1;
+                        }
+                    break;
+
+                case 2:
+                    foreach (var item in o)
+                        if (item == "[")
+                        {
+                            res += "|" + "\\[";
+                        }
+                        else if (item == "]")
+                        {
+                            res += "|" + "\\]";
+                        }
+                        else if (item == "(")
+                        {
+                            res += "|" + "\\(";
+                        }
+                        else if (item == ")")
+                        {
+                            res += "|" + "\\)";
+                        }
+                        else if (item == "}")
+                        {
+                            res += "|" + "\\}";
+                        }
+                        else if (item == "{")
+                        {
+                            res += "|" + "\\{";
+                        }
+                        else if (item == "+")
+                        {
+                            res += "|" + "\\+";
+                        }
+                        else if (item == "*")
+                        {
+                            res += "|" + "\\*";
+                        }
+                        else if (item == ".")
+                        {
+                            res += "|" + "\\.";
+                        }
+                        else if (item == ";" | item == "," || item == "!" || item == "-" || item == "/" || item == "%" || item == "<" || item == ">" || item == "<" || item == "=" || item == "<")
+                        {
+                            res += "|" + item;
+                        }
+                    break;
+            }
+            return res.TrimStart('|');
+        }
+
+        private void RemoveRecurrence(ref string copy, MatchCollection recurrences)
+        {
+            foreach (Match match in recurrences)
+            {
+                copy = copy.Replace(match.Value, "");
+            }
+        }
         #endregion
 
 

@@ -46,7 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class\Filter.cs" />
     <Compile Include="Class\ReadFileC.cs" />
     <Compile Include="Class\Scanner.cs" />
     <Compile Include="Class\Token.cs" />
