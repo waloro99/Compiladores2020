@@ -19,6 +19,7 @@ namespace minic.Class
         Token t = new Token(); //call the tokens
         public int column = 1;
         public int row = 0;
+        public bool flag_comment = false; //if there is an open comment --> true
 
         //Patterns
         private string onlyLetters = @"^[a-z A-Z]+$";
@@ -120,7 +121,7 @@ namespace minic.Class
                     
                 }
                 //only operator (1)
-                else if (Regex.IsMatch(word[i], @"(" + operators +")$") && word[i].Length <= 2)
+                else if (Regex.IsMatch(word[i], @"(" + operators +")$") && word[i].Length <= 2) //esto es redundante porque la ER solo hace match si solo tien un solo simbolo...
                 {
                     Insert_Word(word[i], line, "T_Operator");
                 }
@@ -161,7 +162,7 @@ namespace minic.Class
         }
 
         //method for scanner line, because exist commentary or string or both
-        private void Scanner_Line(string word, int line, string type) //type-->string or commentary
+        private void Scanner_Line(string word, int line, string type) //type-->string or commentary/2
         {
             //depend the case 
             switch (type)
@@ -171,26 +172,10 @@ namespace minic.Class
                     string flag_strig = Is_CorrectString(word, line); // --> bad method
                     break;
                 case "commentary":
-                    //check that the commentary has the correct format
-                    char[] Word_A = word.ToArray();
-                    string before_Comment = "";
-                    int i = 0;
-                    while (Word_A[i] != '/' && Word_A[i + 1] != '/')
-                    {
-                        before_Comment = before_Comment + Word_A[i];
-                        i++;
-                    }
-                    //call the method for analisys the string before
-                    //insert 
-                    Type newType = new Type();
-                    newType.cadena = "//...";
-                    newType.linea = line;
-                    newType.Error = ""; //dont exist error
-                    newType.column_I = i+1; //initial in zero
-                    newType.column_F = Word_A.Length - i; //all the line after the '//'
-                    NewFile.Add(newType);
+                    Case_Commentary(word,line);
                     break;
                 case "commentary2":
+                    Case_Commentary2(word,line);
                     break;
                 default:
                     break;
@@ -249,15 +234,15 @@ namespace minic.Class
             //scroll the array
             for (int i = 0; i < array_line.Length; i++)
             {
-                //if is a string
-                if (array_line[i] == '"')
-                    return "string";
                 //if is a line commentary
-                else if (array_line[i] == '/' && array_line[i + 1] == '/')
+                if (array_line[i] == '/' && array_line[i + 1] == '*')
                     return "commentary";
                 //if is a begin commentary
-                else if (array_line[i] == '/' && array_line[i + 1] == '*')
+                else if (array_line[i] == '/' && array_line[i + 1] == '/')
                     return "commentary2";
+                //if is a string
+                else if (array_line[i] == '"')
+                    return "string";
             }
 
             return "";
@@ -389,6 +374,76 @@ namespace minic.Class
                 copy = copy.Replace(match.Value, "");
             }
         }
+
+        //method for case commentary in method scanner line
+        private void Case_Commentary(string word, int line)
+        {
+            //check that the commentary has the correct format
+            char[] Word_A = word.ToArray();
+            string before_Comment = "";
+            int i = 0;
+            while (Word_A[i] != '/' && Word_A[i + 1] != '/')
+            {
+                before_Comment = before_Comment + Word_A[i];
+                i++;
+            }
+            //call the method for analisys the string before
+            if (before_Comment != "")
+            {
+                string[] b_word = Regex.Split(before_Comment, " ");//parse string separately
+                Filter_First(b_word, line);
+            }         
+            //insert commentary in list
+            Type newType = new Type();
+            newType.cadena = "//...";
+            newType.linea = line;
+            newType.Error = ""; //dont exist error
+            newType.column_I = i + 1; //initial in zero 
+            newType.column_F = Word_A.Length - i; //all the line after the '//'
+            NewFile.Add(newType);
+        }
+
+        //method for case commentary2 in method scanner line
+        private void Case_Commentary2(string word, int line)
+        {
+            //check that the commentary2 has the correct format
+            char[] Word_A2 = word.ToArray();
+            string before_Comment2 = string.Empty;
+            string after_Comment2 = string.Empty;
+            bool flag_before = false;
+            bool flag_after = false;
+            //Scroll the line
+            for (int i = 0; i < word.Length; i++)
+            {
+                if (Word_A2[i] != '/' && Word_A2[i + 1] != '*' && flag_before == false)
+                    before_Comment2 = before_Comment2 + Word_A2[i];
+                else if (Word_A2[i] == '/' && Word_A2[i + 1] == '*')
+                    flag_before = true;
+                else if (Word_A2[i] == '*' && Word_A2[i + 1] == '/')
+                    flag_after = true;
+                else if (flag_before == true && flag_after == true)
+                    after_Comment2 = after_Comment2 + Word_A2[i];
+            }
+            //check commentary before
+            if (before_Comment2 != "")
+            {
+                string[] b_word = Regex.Split(before_Comment2, " ");//parse string separately
+                Filter_First(b_word, line);
+            }
+            //check flag
+            if (flag_after == true)
+            {
+                if (after_Comment2 != "")
+                {
+                    string[] b_word = Regex.Split(after_Comment2, " ");//parse string separately
+                    Filter_First(b_word, line);
+                }
+            }
+            else
+                flag_comment = true; //exist open commentary
+        }
+
+
         #endregion
 
 
