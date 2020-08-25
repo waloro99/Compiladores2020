@@ -55,13 +55,21 @@ namespace minic.Class
                 //separate the words
                 string[] word = Regex.Split(file[i], " ");
                 row++; //the line increment 
-                //check if it is not comment or string
-                string type_line = Is_Line(file[i]);
-                if (type_line != "")
-                    Scanner_Line(file[i], row, type_line); //filter the commentary and string, string the line complete
+                if (flag_comment == false)
+                {
+                    //check if it is not comment or string
+                    string type_line = Is_Line(file[i]);
+                    if (type_line != "")
+                        Scanner_Line(file[i], row, type_line); //filter the commentary and string, string the line complete
+                    else
+                        Filter_First(word, row); //first filter for word by word, array the word          
+                    column = 1; //restart
+                }
                 else
-                    Filter_First(word, row); //first filter for word by word, array the word          
-                column = 1; //restart
+                {
+
+                }
+               
             }
 
         }
