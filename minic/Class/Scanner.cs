@@ -22,14 +22,14 @@ namespace minic.Class
         public bool flag_comment = false; //if there is an open comment --> true
 
         //Patterns
-        private string onlyLetters = @"^[a-z A-Z]+$";
+        private string onlyLetters = @"^[a-zA-Z]+$";
         private string boolPattern = @"^(true|false)$";
         private string decimalConst = @"^[0-9]+$";
         private string doubleGeneral = @"^[0-9]+[.](([0-9]*)([E|e][+|-]?[0-9]+)?)$"; //double or Exp
         private string doubleFloat = @"^[0-9]+[.]([0-9]+)$"; //double with '.' and decimal numbers
         private string doubleFloat2 = @"^[0-9]+[.]$"; //double without decimal numbers
         private string expS = @"^[0-9]+[.](([0-9]*)([E|e][0-9]+)?)$"; //Exp without '+-' simbols
-        private string hexaDecimal = @"^(0x|0X)[0-9]+[a-fA-F]*$";
+        private string hexaDecimal = @"^(0x|0X)[0-9]*[a-fA-F]*$";
 
         //method public for scanner the file
         public List<Type> Scanner_Lexic(string[] file)
@@ -149,7 +149,7 @@ namespace minic.Class
             }
         }
 
-        //method for Second Filter, only words
+        //method for Second Filter, many tokens in the same line
         private void Second_Filter(string word, int line)
         {
             var copy = word;
@@ -157,6 +157,15 @@ namespace minic.Class
             var reserved = Reserved_A(t.Reserved_Words());
             var listReserved = Regex.Matches(copy, @"(" + reserved + ")"); //find Reserved words
             RemoveRecurrence(ref copy, listReserved);
+
+            var listHexaDecimals = Regex.Matches(copy, @"(0x|0X)[0-9]*[a-fA-F]*");
+            RemoveRecurrence(ref copy, listHexaDecimals);
+
+            var listExp = Regex.Matches(copy, @"([0-9]+[.](([0-9]*)([E|e][+|-]?[0-9]+)))");
+            RemoveRecurrence(ref copy, listExp);
+
+            var listDouble = Regex.Matches(copy, @"[0-9]+[.]([0-9]+)?");
+            RemoveRecurrence(ref copy, listDouble);
 
             var operators1 = Operator_A(t.Operators_Words(), 1);
             var listOperators = Regex.Matches(copy, @""+ operators1 +""); //find dobules operators like == != () {} <= >=
@@ -166,10 +175,14 @@ namespace minic.Class
             var listOperators2 = Regex.Matches(copy, @"" + operators2 + ""); //find single operators like = , . ! < > { } ( )
             RemoveRecurrence(ref copy, listOperators2);
 
-            var listOnlyWords = Regex.Matches(copy, @"[a-z A-Z]*"); //Only identifiers
+            var listDecimals = Regex.Matches(copy, @"[0-9]+");
+            RemoveRecurrence(ref copy, listDecimals);
 
-            //Falta los doubles, que van antes de buscar match con palabras solas
+            var listBoolean = Regex.Matches(copy, @"(true|false)"); //find boolean values.
+            RemoveRecurrence(ref copy, listBoolean);
 
+            var listOnlyWords = Regex.Matches(copy, @"[a-zA-Z]+"); //Only identifiers
+            RemoveRecurrence(ref copy, listOnlyWords);
         }
 
         //method for scanner line, because exist commentary or string or both
@@ -380,9 +393,12 @@ namespace minic.Class
 
         private void RemoveRecurrence(ref string copy, MatchCollection recurrences)
         {
-            foreach (Match match in recurrences)
+            if (recurrences.Count != 0)
             {
-                copy = copy.Replace(match.Value, "");
+                foreach (Match match in recurrences)
+                {
+                    copy = copy.Replace(match.Value, "");
+                }
             }
         }
 
