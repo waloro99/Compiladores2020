@@ -57,7 +57,7 @@ namespace minic
         private void button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Text documents (.txt)|*.txt"; //only file .txt
+            //openFileDialog.Filter = "Text documents (.txt)|*.txt"; //only file .txt
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 PathFile = openFileDialog.FileName;
@@ -83,7 +83,6 @@ namespace minic
         {
             //instance class
             ReadFileC rf = new ReadFileC();
-            Token t = new Token();
             Scanner s = new Scanner();
 
             //return config start
@@ -95,24 +94,27 @@ namespace minic
 
             //check if it is empty
             if (res.Length == 0)
-            {
                 MessageBox.Show("El archivo se encontro vacio."); //end program
-            }
             else
             {
                 //method for analysis
                 List<Class.Type> FileScanner = s.Scanner_Lexic(res);
-
-
-
-                //codigo basura
-                /*List<string> reserved = t.Operators_Words();
-                foreach (var item in reserved)
+                bool flag_error = false;
+                //Show errors
+                foreach (var item in FileScanner)
                 {
-                    MessageBox.Show(item);
-                }*/
+                    if (item.Error != "")
+                    {
+                        MessageBox.Show("Error: " + item.Error);
+                        flag_error = true;
+                    }
+                       
+                }
 
-
+                if (flag_error == false)
+                    MessageBox.Show("El archivo se analizó correctamente");
+                //write the file
+                rf.WriteFile(FileScanner,PathFile);
             }
 
         }

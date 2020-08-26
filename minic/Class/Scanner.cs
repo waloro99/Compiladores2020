@@ -63,13 +63,10 @@ namespace minic.Class
                         Scanner_Line(file[i], row, type_line); //filter the commentary and string, string the line complete
                     else
                         Filter_First(word, row); //first filter for word by word, array the word          
-                    column = 1; //restart
                 }
                 else
-                {
-
-                }
-               
+                    Continue_Commented(file[i], row);
+                column = 1; //restart             
             }
 
         }
@@ -244,10 +241,10 @@ namespace minic.Class
             {
                 //if is a line commentary
                 if (array_line[i] == '/' && array_line[i + 1] == '*')
-                    return "commentary";
+                    return "commentary2";
                 //if is a begin commentary
                 else if (array_line[i] == '/' && array_line[i + 1] == '/')
-                    return "commentary2";
+                    return "commentary";
                 //if is a string
                 else if (array_line[i] == '"')
                     return "string";
@@ -401,14 +398,6 @@ namespace minic.Class
                 string[] b_word = Regex.Split(before_Comment, " ");//parse string separately
                 Filter_First(b_word, line);
             }         
-            //insert commentary in list
-            Type newType = new Type();
-            newType.cadena = "//...";
-            newType.linea = line;
-            newType.Error = ""; //dont exist error
-            newType.column_I = i + 1; //initial in zero 
-            newType.column_F = Word_A.Length - i; //all the line after the '//'
-            NewFile.Add(newType);
         }
 
         //method for case commentary2 in method scanner line
@@ -451,6 +440,28 @@ namespace minic.Class
                 flag_comment = true; //exist open commentary
         }
 
+        //method to know if this line is the closing of the comment
+        private void Continue_Commented(string word, int line)
+        {
+            char[] word_A = word.ToArray();
+            string after_commentary = string.Empty;
+            //scroll the string
+            for (int i = 0; i < word_A.Length; i++)
+            {
+                if (i < word_A.Length - 1 && word_A[i] == '*' && word_A[i+1] == '/' )
+                {
+                    flag_comment = false;
+                    i++;//next character analysis
+                }               
+                if (flag_comment == false)
+                    after_commentary = after_commentary + word_A[i];
+            }
+            if (after_commentary != "")
+            {
+                string[] b_word = Regex.Split(after_commentary, " ");//parse string separately
+                Filter_First(b_word,line);
+            }
+        }
 
         #endregion
 
