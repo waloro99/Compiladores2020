@@ -18,7 +18,7 @@ namespace minic.Class
 
         public override string ToString()
         {
-            return $"{cadena}\t\tline {linea} cols {column_I}-{column_F} is {description}";
+            return $"{cadena}\t\tline {linea} cols {column_I}-{column_F} is {description} {Error}";
         }
     }
 }

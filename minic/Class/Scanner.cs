@@ -290,7 +290,7 @@ namespace minic.Class
         {
             string res = string.Empty;
             foreach (var item in o)
-                res += "|[" + item + "]";
+                res += "|[" + item + "]"; //----------------------------->No reconoce por los corchetes
 
             return res.TrimStart('|');
         }
@@ -412,12 +412,15 @@ namespace minic.Class
             //Scroll the line
             for (int i = 0; i < word.Length; i++)
             {
-                if (Word_A2[i] != '/' && Word_A2[i + 1] != '*' && flag_before == false)
+                if (i < word.Length-1 && Word_A2[i] != '/' && Word_A2[i + 1] != '*' && flag_before == false)
                     before_Comment2 = before_Comment2 + Word_A2[i];
-                else if (Word_A2[i] == '/' && Word_A2[i + 1] == '*')
+                else if (flag_before == false && Word_A2[i] == '/' && Word_A2[i + 1] == '*' )
                     flag_before = true;
-                else if (Word_A2[i] == '*' && Word_A2[i + 1] == '/')
+                else if (i < word.Length - 1 &&  Word_A2[i] == '*' && Word_A2[i + 1] == '/')
+                {
                     flag_after = true;
+                    i++; //quit character '/'
+                }                   
                 else if (flag_before == true && flag_after == true)
                     after_Comment2 = after_Comment2 + Word_A2[i];
             }
@@ -453,7 +456,7 @@ namespace minic.Class
                     flag_comment = false;
                     i++;//next character analysis
                 }               
-                if (flag_comment == false)
+                else if (flag_comment == false)
                     after_commentary = after_commentary + word_A[i];
             }
             if (after_commentary != "")
