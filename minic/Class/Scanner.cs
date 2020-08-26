@@ -76,7 +76,8 @@ namespace minic.Class
         {
             //call the tokens
             List<string> ope = t.Operators_Words();
-            string operators = Operator_A(ope);
+            string operators1 = Operator_A(ope,1); //double oerator like '==', '!=', '||'
+            string operators2 = Operator_A(ope, 2); //single operators like '=', '*', '+', ';'.
             //scroll the array word by word
             for (int i = 0; i < word.Length; i++)
             {
@@ -126,7 +127,12 @@ namespace minic.Class
                     
                 }
                 //only operator (1)
-                else if (Regex.IsMatch(word[i], @"(" + operators +")$") && word[i].Length <= 2) //esto es redundante porque la ER solo hace match si solo tien un solo simbolo...
+                else if (Regex.IsMatch(word[i], @"(" + operators1 +")$"))
+                {
+                    Insert_Word(word[i], line, "T_Operator");
+                }
+                //only operator (1)
+                else if (Regex.IsMatch(word[i], @"(" + operators2 + ")$"))
                 {
                     Insert_Word(word[i], line, "T_Operator");
                 }
@@ -148,19 +154,19 @@ namespace minic.Class
         {
             var copy = word;
 
-            var reserved = Operator_A(t.Reserved_Words()).Replace("[","").Replace("]","");
-            var listReserved = Regex.Matches(copy, @"(" + reserved + ")"); //Se obtienen las palabras reservadas
+            var reserved = Reserved_A(t.Reserved_Words());
+            var listReserved = Regex.Matches(copy, @"(" + reserved + ")"); //find Reserved words
             RemoveRecurrence(ref copy, listReserved);
 
-            var operators1 = Operator_SecondFilter(t.Operators_Words(), 1);
-            var listOperators = Regex.Matches(copy, @""+ operators1 +""); //Operadores dobles como == != () {} <= >=
+            var operators1 = Operator_A(t.Operators_Words(), 1);
+            var listOperators = Regex.Matches(copy, @""+ operators1 +""); //find dobules operators like == != () {} <= >=
             RemoveRecurrence(ref copy, listOperators);
 
-            var operators2 = Operator_SecondFilter(t.Operators_Words(), 2);
-            var listOperators2 = Regex.Matches(copy, @"" + operators2 + ""); //Operadores simples como = , . ! < > { } ( )
+            var operators2 = Operator_A(t.Operators_Words(), 2);
+            var listOperators2 = Regex.Matches(copy, @"" + operators2 + ""); //find single operators like = , . ! < > { } ( )
             RemoveRecurrence(ref copy, listOperators2);
 
-            var listOnlyWords = Regex.Matches(copy, @"[a-z A-Z]*"); //Palabras
+            var listOnlyWords = Regex.Matches(copy, @"[a-z A-Z]*"); //Only identifiers
 
             //Falta los doubles, que van antes de buscar match con palabras solas
 
@@ -192,7 +198,7 @@ namespace minic.Class
         {
             //call the tokens
             List<string> reser = t.Reserved_Words();
-            string reserved = Operator_A(reser);
+            string reserved = Reserved_A(reser);
 
             if (Regex.IsMatch(w, @"^(" + reserved + ")$"))
             {
@@ -286,16 +292,16 @@ namespace minic.Class
         }
 
         //method for array the operator / array the reserved word
-        private string Operator_A(List<string> o)
+        private string Reserved_A(List<string> o)
         {
             string res = string.Empty;
             foreach (var item in o)
-                res += "|[" + item + "]"; //----------------------------->No reconoce por los corchetes
+                res += "|" + item;
 
             return res.TrimStart('|');
         }
 
-        private string Operator_SecondFilter(List<string> o, int group)
+        private string Operator_A(List<string> o, int group)
         {
             string res = string.Empty;
 
