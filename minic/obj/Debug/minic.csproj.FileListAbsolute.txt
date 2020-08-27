@@ -17,3 +17,4 @@ C:\Users\ricar\Documents\ProyectosLabs\Compiladores2020\minic\obj\Debug\minic.cs
 C:\Users\ricar\Documents\ProyectosLabs\Compiladores2020\minic\obj\Debug\minic.csproj.CoreCompileInputs.cache
 C:\Users\ricar\Documents\ProyectosLabs\Compiladores2020\minic\obj\Debug\minic.exe
 C:\Users\ricar\Documents\ProyectosLabs\Compiladores2020\minic\obj\Debug\minic.pdb
+C:\Users\walte\OneDrive\Documentos\papucho\2020\8vo Ciclo\Compiladores\Proyecto\Proyecto Compiladores\Compiladores2020\minic\obj\Debug\minic.csproj.CoreCompileInputs.cache

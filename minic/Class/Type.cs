@@ -21,14 +21,11 @@ namespace minic.Class
         public override string ToString()
         {
             if (Error == "")
-            {
                 return $"{cadena}\t\tline {linea} cols {column_I}-{column_F} is {description}\n";
-            }
+            else if (Error != "" && description != "")
+                return $"*** {Error} line {linea}. *** EOF in unfinished '{cadena}'\n";
             else
-            {
-                return $"*** {Error} line {linea}. *** Unrecognized char: '{cadena}'\n";
-            }
-            
+                return $"*** {Error} line {linea}. *** Unrecognized char: '{cadena}'\n";           
         }
 
         public int CompareTo(object obj)

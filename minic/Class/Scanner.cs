@@ -30,6 +30,7 @@ namespace minic.Class
         private string doubleFloat2 = @"^[0-9]+[.]$"; //double without decimal numbers
         private string expS = @"^[0-9]+[.](([0-9]*)([E|e][0-9]+)?)$"; //Exp without '+-' simbols
         private string hexaDecimal = @"^(0x|0X)[0-9]*[a-fA-F]*$";
+        private string string_W = @"^ $"; //ER for string in the file
 
         //method public for scanner the file
         public List<Type> Scanner_Lexic(string[] file)
@@ -68,7 +69,8 @@ namespace minic.Class
                     Continue_Commented(file[i], row);
                 column = 1; //restart             
             }
-
+            if (flag_comment == true) //check the error EOF
+                Insert_Error("comment",row,"Error");
         }
 
         //method for first filter, parameters words and line
@@ -614,7 +616,7 @@ namespace minic.Class
             char[] Word_A = word.ToArray();
             string before_Comment = "";
             int i = 0;
-            while (Word_A[i] != '/' && Word_A[i + 1] != '/')
+            while (Word_A[i] != '/' || Word_A[i + 1] != '/')
             {
                 before_Comment = before_Comment + Word_A[i];
                 i++;
@@ -691,6 +693,20 @@ namespace minic.Class
                 string[] b_word = Regex.Split(after_commentary, " ");//parse string separately
                 Filter_First(b_word,line);
             }
+        }
+
+        //method for insert error EOF
+        private void Insert_Error(string word, int line, string type)
+        {
+            //insert into TYPE list
+            Type newType = new Type();
+            newType.cadena = word;
+            newType.linea = line;
+            newType.Error = "Error"; //dont exist error
+            newType.column_I = 0;
+            newType.column_F = 0;
+            newType.description = type; //In this case for diferent other case use description
+            NewFile.Add(newType);
         }
 
         #endregion
