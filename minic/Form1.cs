@@ -105,7 +105,7 @@ namespace minic
                 {
                     if (item.Error != "")
                     {
-                        MessageBox.Show("Error: " + item.Error);
+                        MessageBox.Show(item.ToString());
                         flag_error = true;
                     }
                        

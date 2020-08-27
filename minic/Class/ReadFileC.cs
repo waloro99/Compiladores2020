@@ -30,7 +30,7 @@ namespace minic.Class
         public void WriteFile(List<Type> list, string PathF)
         {
             string NewPath = NewPath_File(PathF);
-            NewPath = NewPath + ".out";
+            NewPath = NewPath + "out";
             TextWriter write = new StreamWriter(NewPath);
             foreach (var item in list)
             {

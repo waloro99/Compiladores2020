@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace minic.Class
 {
-    public class Type
+    public class Type : IComparable
     {
         //class type object
         public string cadena { get; set; } //Data
@@ -16,9 +16,30 @@ namespace minic.Class
         public string Error { get; set; } //if exist a error
         public string description{ get; set; }
 
+        public int IndexMatch { get; set; }
+
         public override string ToString()
         {
-            return $"{cadena}\t\tline {linea} cols {column_I}-{column_F} is {description} {Error}";
+            if (Error == "")
+            {
+                return $"{cadena}\t\tline {linea} cols {column_I}-{column_F} is {description}\n";
+            }
+            else
+            {
+                return $"*** {Error} line {linea}. *** Unrecognized char: '{cadena}'\n";
+            }
+            
         }
+
+        public int CompareTo(object obj)
+        {
+            var comparer = (Type) obj;
+            return IndexMatch.CompareTo(comparer.IndexMatch);
+        }
+
+        public static Comparison<Type> OrderByIndex = delegate(Type ty1, Type ty2)
+        {
+            return ty1.CompareTo(ty2);
+        };
     }
 }

@@ -118,7 +118,16 @@ namespace minic.Class
                     }
                     else if(Regex.IsMatch(word[i], expS)) //Exp without '+-'
                     {
-                        Insert_Word(word[i], line, "T_DoubleExpConst (value = " + word[i].Split('E')[0] + "E+" + word[i].Split('E')[1] + ")");
+                        if (word[i].Contains("E"))
+                        {
+                            Insert_Word(word[i], line, "T_DoubleExpConst (value = " + word[i].Split('E')[0] + "E+" + word[i].Split('E')[1] + ")");
+                        }
+                        else
+                        {
+                            Insert_Word(word[i], line, "T_DoubleExpConst (value = " + word[i].Split('e')[0] + "E+" + word[i].Split('e')[1] + ")");
+                        }
+
+                        
                     }
                     else
                     {
@@ -127,12 +136,12 @@ namespace minic.Class
                     
                 }
                 //only operator (1)
-                else if (Regex.IsMatch(word[i], @"(" + operators1 +")$"))
+                else if (Regex.IsMatch(word[i], @"^(" + operators1 +")$"))
                 {
                     Insert_Word(word[i], line, "T_Operator");
                 }
                 //only operator (1)
-                else if (Regex.IsMatch(word[i], @"(" + operators2 + ")$"))
+                else if (Regex.IsMatch(word[i], @"^(" + operators2 + ")$"))
                 {
                     Insert_Word(word[i], line, "T_Operator");
                 }
@@ -171,9 +180,6 @@ namespace minic.Class
             var listOperators = Regex.Matches(copy, @""+ operators1 +""); //find dobules operators like == != () {} <= >=
             RemoveRecurrence(ref copy, listOperators);
 
-            var operators2 = Operator_A(t.Operators_Words(), 2);
-            var listOperators2 = Regex.Matches(copy, @"" + operators2 + ""); //find single operators like = , . ! < > { } ( )
-            RemoveRecurrence(ref copy, listOperators2);
 
             var listDecimals = Regex.Matches(copy, @"[0-9]+");
             RemoveRecurrence(ref copy, listDecimals);
@@ -183,6 +189,198 @@ namespace minic.Class
 
             var listOnlyWords = Regex.Matches(copy, @"[a-zA-Z]+"); //Only identifiers
             RemoveRecurrence(ref copy, listOnlyWords);
+
+
+            var operators2 = Operator_A(t.Operators_Words(), 2);
+            var listOperators2 = Regex.Matches(copy, @"" + operators2 + ""); //find single operators like = , . ! < > { } ( )
+            RemoveRecurrence(ref copy, listOperators2);
+
+            var listTokens = FindIndex(word, line, listReserved, listHexaDecimals, listExp, listDouble, listOperators,
+                listOperators2, listDecimals, listBoolean, listOnlyWords, copy);
+
+            foreach (var tokenType in listTokens)
+            {
+                tokenType.column_I = column;
+                tokenType.column_F = tokenType.column_I + tokenType.cadena.Length;
+                column = tokenType.column_F + 1;
+
+                NewFile.Add(tokenType);
+            }
+        }
+
+        private List<Type> FindIndex(string word, int line, MatchCollection listReserved, MatchCollection listHexaDecimals, MatchCollection listExp, MatchCollection listDouble, MatchCollection listOperators, MatchCollection listOperators2, MatchCollection listDecimals, MatchCollection listBoolean, MatchCollection listOnlyWords, string copy)
+        {
+            var listTokens = new List<Type>();
+
+            if (listReserved.Count != 0)
+            {
+                foreach (Match match1 in listReserved)
+                {
+                    Type newType = new Type();
+                    newType.cadena = match1.Value;
+                    newType.linea = line;
+                    newType.Error = ""; //dont exist error
+                    newType.IndexMatch = match1.Index;
+                    newType.description = "T_" + match1.Value;
+                    listTokens.Add(newType);
+                }
+            }
+
+            if (listHexaDecimals.Count != 0)
+            {
+                foreach (Match match2 in listHexaDecimals)
+                {
+                    Type newType = new Type();
+                    newType.cadena = match2.Value;
+                    newType.linea = line;
+                    newType.Error = ""; //dont exist error
+                    newType.IndexMatch = match2.Index;
+                    newType.description = "T_Hexadecimal: (value = " + match2.Value + ")";
+                    listTokens.Add(newType);
+                }
+            }
+
+            if (listExp.Count != 0)
+            {
+                foreach (Match match3 in listExp)
+                {
+                    Type newType = new Type();
+                    newType.cadena = match3.Value;
+                    newType.linea = line;
+                    newType.Error = ""; //dont exist error
+                    newType.IndexMatch = match3.Index;
+
+                    if (Regex.IsMatch(match3.Value, expS)) //Exp without '+-'
+                    {
+                        if (match3.Value.Contains("E"))
+                        {
+                            newType.description = "T_DoubleExpConst (value = " + match3.Value.Split('E')[0] + "E+" + match3.Value.Split('E')[1] + ")";
+                        }
+                        else
+                        {
+                            newType.description = "T_DoubleExpConst (value = " + match3.Value.Split('e')[0] + "E+" + match3.Value.Split('e')[1] + ")";
+                        }
+                    }
+                    else
+                    {
+                        newType.description = "T_DoubleExpConst (value = " + match3.Value + ")";
+                    }
+
+                    listTokens.Add(newType);
+                }
+            }
+
+            if (listDouble.Count != 0)
+            {
+                foreach (Match match4 in listDouble)
+                {
+                    Type newType = new Type();
+                    newType.cadena = match4.Value;
+                    newType.linea = line;
+                    newType.Error = ""; //dont exist error
+                    newType.IndexMatch = match4.Index;
+
+                    if (Regex.IsMatch(match4.Value, doubleFloat))
+                    {
+                        newType.description = "T_DoubleConst (value = " + match4 + ")";
+                    }
+                    if (Regex.IsMatch(match4.Value, doubleFloat2))
+                    {
+                        newType.description = "T_DoubleConst (value = " + match4 + "00)";
+                    }
+                    listTokens.Add(newType);
+                }
+            }
+
+            if (listOperators.Count != 0)
+            {
+                foreach (Match match5 in listOperators)
+                {
+                    Type newType = new Type();
+                    newType.cadena = match5.Value;
+                    newType.linea = line;
+                    newType.Error = ""; //dont exist error
+                    newType.IndexMatch = match5.Index;
+                    newType.description = "T_Operator";
+                    listTokens.Add(newType);
+                }
+            }
+
+            if (listOperators2.Count != 0)
+            {
+                foreach (Match match6 in listOperators2)
+                {
+                    Type newType = new Type();
+                    newType.cadena = match6.Value;
+                    newType.linea = line;
+                    newType.Error = ""; //dont exist error
+                    newType.IndexMatch = match6.Index;
+                    newType.description = "T_Operator";
+                    listTokens.Add(newType);
+                }
+            }
+
+            if (listDecimals.Count != 0)
+            {
+                foreach (Match match7 in listDecimals)
+                {
+                    Type newType = new Type();
+                    newType.cadena = match7.Value;
+                    newType.linea = line;
+                    newType.Error = ""; //dont exist error
+                    newType.IndexMatch = match7.Index;
+                    newType.description = "T_IntConst (value = " + match7 + ")";
+                    listTokens.Add(newType);
+                }
+            }
+
+            if (listBoolean.Count != 0)
+            {
+                foreach (Match match8 in listBoolean)
+                {
+                    Type newType = new Type();
+                    newType.cadena = match8.Value;
+                    newType.linea = line;
+                    newType.Error = ""; //dont exist error
+                    newType.IndexMatch = match8.Index;
+                    newType.description = "T_Bool: " + match8.Value;
+                    listTokens.Add(newType);
+                }
+            }
+
+            if (listOnlyWords.Count != 0)
+            {
+                foreach (Match match9 in listOnlyWords)
+                {
+                    Type newType = new Type();
+                    newType.cadena = match9.Value;
+                    newType.linea = line;
+                    newType.Error = ""; //dont exist error
+                    newType.IndexMatch = match9.Index;
+                    newType.description = "T_Identifier";
+                    listTokens.Add(newType);
+                }
+            }
+
+            if (copy.Length >=1)
+            {
+                foreach (var item in copy.Split(' '))
+                {
+                    if (item != "")
+                    {
+                        Type newType = new Type();
+                        newType.cadena = item.ToString();
+                        newType.linea = line;
+                        newType.Error = "Error"; //dont exist error
+                        newType.description = "";
+                        newType.IndexMatch = word.IndexOf(item);
+                        listTokens.Add(newType);
+                    }
+                }
+            }
+
+            listTokens.Sort(Type.OrderByIndex);
+            return listTokens;
         }
 
         //method for scanner line, because exist commentary or string or both
@@ -397,11 +595,18 @@ namespace minic.Class
             {
                 foreach (Match match in recurrences)
                 {
-                    copy = copy.Replace(match.Value, "");
+                    var spaces = string.Empty;
+
+                    for (int i = 0; i < match.Value.Length; i++)
+                    {
+                        spaces += " ";
+                    }
+
+                    copy = copy.Replace(match.Value, spaces);
                 }
             }
         }
-
+        
         //method for case commentary in method scanner line
         private void Case_Commentary(string word, int line)
         {
@@ -489,7 +694,6 @@ namespace minic.Class
         }
 
         #endregion
-
-
     }
+
 }
