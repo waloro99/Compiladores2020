@@ -128,8 +128,6 @@ namespace minic.Class
                         {
                             Insert_Word(word[i], line, "T_DoubleExpConst (value = " + word[i].Split('e')[0] + "E+" + word[i].Split('e')[1] + ")");
                         }
-
-                        
                     }
                     else
                     {
@@ -156,6 +154,7 @@ namespace minic.Class
                 else
                 {
                     Second_Filter(word[i], line);
+                    column++;
                 }
             }
         }
@@ -189,7 +188,7 @@ namespace minic.Class
             var listBoolean = Regex.Matches(copy, @"(true|false)"); //find boolean values.
             RemoveRecurrence(ref copy, listBoolean);
 
-            var listOnlyWords = Regex.Matches(copy, @"[a-zA-Z]+"); //Only identifiers
+            var listOnlyWords = Regex.Matches(copy, @"\w+"); //Only identifiers
             RemoveRecurrence(ref copy, listOnlyWords);
 
 
@@ -203,8 +202,13 @@ namespace minic.Class
             foreach (var tokenType in listTokens)
             {
                 tokenType.column_I = column;
-                tokenType.column_F = tokenType.column_I + tokenType.cadena.Length;
+                tokenType.column_F = tokenType.column_I + (tokenType.cadena.Length-1);
                 column = tokenType.column_F + 1;
+
+                if (tokenType.description == "Identifier length exceeds 31 characters")
+                {
+                    tokenType.cadena = "truncated string";
+                }
 
                 NewFile.Add(tokenType);
             }
@@ -355,11 +359,34 @@ namespace minic.Class
                 foreach (Match match9 in listOnlyWords)
                 {
                     Type newType = new Type();
-                    newType.cadena = match9.Value;
-                    newType.linea = line;
-                    newType.Error = ""; //dont exist error
-                    newType.IndexMatch = match9.Index;
-                    newType.description = "T_Identifier";
+
+                    if (match9.Value.Length > 30)
+                    {
+                        newType.cadena = match9.Value.Substring(0,31);
+                        newType.linea = line;
+                        newType.Error = ""; //dont exist error
+                        newType.IndexMatch = match9.Index;
+                        newType.description = "T_Identifier";
+
+
+                        var errorToken = new Type();
+                        errorToken.cadena = match9.Value.Substring(31, (match9.Value.Length - 31));
+                        errorToken.linea = line;
+                        errorToken.Error = "Error";
+                        errorToken.description = "Identifier length exceeds 31 characters";
+                        errorToken.IndexMatch = match9.Index + 30;
+                        listTokens.Add(errorToken);
+                    }
+                    else
+                    {
+                        newType.cadena = match9.Value;
+                        newType.linea = line;
+                        newType.Error = ""; //dont exist error
+                        newType.IndexMatch = match9.Index;
+                        newType.description = "T_Identifier";
+                        
+                    }
+
                     listTokens.Add(newType);
                 }
             }
@@ -371,10 +398,10 @@ namespace minic.Class
                     if (item != "")
                     {
                         Type newType = new Type();
-                        newType.cadena = item.ToString();
+                        newType.cadena = item;
                         newType.linea = line;
                         newType.Error = "Error"; //dont exist error
-                        newType.description = "";
+                        newType.description = "*** Unrecognized char:";
                         newType.IndexMatch = word.IndexOf(item);
                         listTokens.Add(newType);
                     }
