@@ -96,15 +96,15 @@ namespace minic.Class
                         }
                         else
                         {
-                            if (word[i].Length > 30)
-                            {
+                            //if (word[i].Length > 30)
+                            //{
                                 Second_Filter(word[i], line);
-                            }
-                            else
-                            {
-                                //is a identifier
-                                Insert_Word(word[i], line, "T_Identifier");
-                            }
+                            //}
+                            //else
+                            //{
+                            //    //is a identifier
+                            //    Insert_Word(word[i], line, "T_Identifier");
+                            //}
                         }
                     }
                 }
