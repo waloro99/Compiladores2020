@@ -459,18 +459,18 @@ namespace minic.Class
         private void Is_String(string word, int line)
         {
             //first error --> string null
-            if (word.Length < 3)
-            {
-                Insert_Error("'" + word + "'",line, "String Null:");//in this case the string is  --> ""
-            }
-            else 
-            {
+            //if (word.Length < 3)
+            //{
+            //    Insert_Error("'" + word + "'",line, "String Null:");//in this case the string is  --> ""
+            //}
+            //else 
+            //{
                 // Check character in string
                 if (!word.Contains(@"\n"))
                     Insert_Word(word,line, "T_StringConstant (value = "+ word +")");
                 else
                     Insert_Error(word, line, "Unrecognized char: 'new line'");//in this case the string is  --> "\n"
-            }
+            //}
 
         }
 

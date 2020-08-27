@@ -115,8 +115,10 @@ namespace minic
                 if (flag_error == false)
                     MessageBox.Show("El archivo se analizó correctamente.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else
-                    MessageBox.Show(errors,"Error:",MessageBoxButtons.OK, MessageBoxIcon.Error);
+                {
+                    MessageBox.Show(errors, "Error:", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     MessageBox.Show("El archivo se termino de analizar.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
                 //write the file
                 rf.WriteFile(FileScanner,PathFile);
             }
