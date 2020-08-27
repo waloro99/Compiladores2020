@@ -30,7 +30,6 @@ namespace minic.Class
         private string doubleFloat2 = @"^[0-9]+[.]$"; //double without decimal numbers
         private string expS = @"^[0-9]+[.](([0-9]*)([E|e][0-9]+)?)$"; //Exp without '+-' simbols
         private string hexaDecimal = @"^(0x|0X)[0-9]*[a-fA-F]*$";
-        private string string_W = @"^ $"; //ER for string in the file
 
         //method public for scanner the file
         public List<Type> Scanner_Lexic(string[] file)
@@ -419,8 +418,7 @@ namespace minic.Class
             switch (type)
             {
                 case "string":
-                    //check that the string has the correct format
-                    string flag_strig = Is_CorrectString(word, line); // --> bad method
+                    Case_String(word,line);
                     break;
                 case "commentary":
                     Case_Commentary(word,line);
@@ -450,15 +448,22 @@ namespace minic.Class
         }
 
         //method to know if it is a string constant
-        private bool Is_String(string w, int line)
+        private void Is_String(string word, int line)
         {
-            if (Regex.IsMatch(w, @"^")) //-----------------------------> Falta hacer expresion regular
+            //first error --> string null
+            if (word.Length < 3)
             {
-                Insert_Word(w, line, "T_StringConst");
-                return true;
+                Insert_Error("'" + word + "'",line, "String Null:");//in this case the string is  --> ""
             }
-            else
-                return false;
+            else 
+            {
+                // Check character in string
+                if (!word.Contains(@"\n"))
+                    Insert_Word(word,line, "T_StringConstant (value = "+ word +")");
+                else
+                    Insert_Error(word, line, "Unrecognized char: 'new line'");//in this case the string is  --> "\n"
+            }
+
         }
 
         //method for insert in list type
@@ -500,34 +505,63 @@ namespace minic.Class
         }
 
         //method for check that the string has the correct format
-        private string Is_CorrectString(string line, int linea) //characters
+        private void Case_String(string word, int line) //characters
         {
-            string I_string = ""; //before the string
-            string F_string = ""; //after the string
-            string N_string = "";
-            bool flag_I = false;
-            bool flag_F = false;
-            //scroll the line
-            char[] Line_A = line.ToArray();
-            for (int i = 0; i < Line_A.Length; i++)
-            {
-                if (flag_I == false && Line_A[i] != '"')//before
-                {
-                    I_string = I_string + Line_A[i];
-                }
-                else if (flag_I == false && Line_A[i] == '"')//now
-                {
-                    flag_I = true;//delete flag
-                    N_string = N_string + Line_A[i];
-                }
-                else if (flag_I == true && flag_F == false )
-                {
+            string before_String = "";
+            string now_String = "";
+            string after_String = "";
+            bool flag_bs = false; //before string
+            bool flag_as = false; //after string
+            char[] word_A = word.ToArray();
 
+            //scroll the line
+            for (int i = 0; i < word_A.Length; i++)
+            {
+                if (word_A[i] != '"' && flag_bs == false && flag_as == false)
+                    before_String = before_String + word_A[i];
+                else if (word_A[i] == '"' && flag_bs == false && flag_as == false)
+                {
+                    flag_bs = true;
+                    now_String = now_String + word_A[i];
+                }
+                else if (word_A[i] != '"' && flag_bs == true && flag_as == false)
+                    now_String = now_String + word_A[i];
+                else if (word_A[i] == '"' && flag_bs == true && flag_as == false)
+                {
+                    now_String = now_String + word_A[i];
+                    flag_as = true;
+                }
+                else if (flag_as == true)
+                    after_String = after_String + word_A[i];
+            }
+
+            if (before_String != "")
+            {
+                // analisys before string
+                string[] word2 = Regex.Split(before_String, " ");
+                Filter_First(word2, row); //first filter for word by word, array the word  
+            }                 
+            //if is string close
+            if (flag_as == false)
+            {
+                //ERROR dont close string
+                Insert_Error("Error String",line,"Error dont close string"); //wait 
+            }
+            else 
+            {
+                //analisys now
+                Is_String(now_String,line);
+                //analysis after string
+                //check if it is not comment or string
+                string type_line = Is_Line(after_String);
+                if (type_line != "")
+                    Scanner_Line(after_String, row, type_line); //filter the commentary and string, string the line complete
+                else
+                {
+                    string[] b_word = Regex.Split(after_String, " ");//parse string separately
+                    Filter_First(b_word, line);
                 }
             }
-            return null;
-
-            //ESTE METODO ESTA MALO HAY QUE CAMBIARLO 
             // hay que tomar como ejemplo una cadena de este tipo --> string c = "hola" + "mundo";
         }
 
@@ -717,8 +751,15 @@ namespace minic.Class
             }
             if (after_commentary != "")
             {
-                string[] b_word = Regex.Split(after_commentary, " ");//parse string separately
-                Filter_First(b_word,line);
+                //check if it is not comment or string
+                string type_line = Is_Line(after_commentary);
+                if (type_line != "")
+                    Scanner_Line(after_commentary, row, type_line); //filter the commentary and string, string the line complete
+                else
+                {
+                    string[] b_word = Regex.Split(after_commentary, " ");//parse string separately
+                    Filter_First(b_word, line);
+                }           
             }
         }
 

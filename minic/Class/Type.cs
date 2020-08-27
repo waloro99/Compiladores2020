@@ -22,7 +22,7 @@ namespace minic.Class
         {
             if (Error == "")
                 return $"{cadena}\t\tline {linea} cols {column_I}-{column_F} is {description}\n";
-            else if (Error != "" && description != "" && description != "Identifier length exceeds 31 characters")
+            else if (Error == "Error" && description == "Error")// && description != "Identifier length exceeds 31 characters")
                 return $"*** {Error} line {linea}. *** EOF in unfinished '{cadena}'\n";
             else
                 return $"*** {Error} line {linea}. {description} '{cadena}'\n";           
