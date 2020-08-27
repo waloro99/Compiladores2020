@@ -100,21 +100,23 @@ namespace minic
                 //method for analysis
                 List<Class.Type> FileScanner = s.Scanner_Lexic(res);
                 bool flag_error = false;
+                var errors = string.Empty;
                 //Show errors
                 foreach (var item in FileScanner)
                 {
                     if (item.Error != "")
                     {
-                        MessageBox.Show(item.ToString());
+                        errors += item.ToString();
                         flag_error = true;
                     }
                        
                 }
 
                 if (flag_error == false)
-                    MessageBox.Show("El archivo se analizó correctamente.");
+                    MessageBox.Show("El archivo se analizó correctamente.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else
-                    MessageBox.Show("El archivo se termino de analizar.");
+                    MessageBox.Show(errors,"Error:",MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("El archivo se termino de analizar.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 //write the file
                 rf.WriteFile(FileScanner,PathFile);
             }

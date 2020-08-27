@@ -96,8 +96,15 @@ namespace minic.Class
                         }
                         else
                         {
-                            //is a identifier
-                            Insert_Word(word[i], line, "T_Identifier");
+                            if (word[i].Length > 30)
+                            {
+                                Second_Filter(word[i], line);
+                            }
+                            else
+                            {
+                                //is a identifier
+                                Insert_Word(word[i], line, "T_Identifier");
+                            }
                         }
                     }
                 }
@@ -180,16 +187,14 @@ namespace minic.Class
             var listOperators = Regex.Matches(copy, @""+ operators1 +""); //find dobules operators like == != () {} <= >=
             RemoveRecurrence(ref copy, listOperators);
 
-
-            var listDecimals = Regex.Matches(copy, @"[0-9]+");
-            RemoveRecurrence(ref copy, listDecimals);
-
             var listBoolean = Regex.Matches(copy, @"(true|false)"); //find boolean values.
             RemoveRecurrence(ref copy, listBoolean);
 
-            var listOnlyWords = Regex.Matches(copy, @"\w+"); //Only identifiers
+            var listOnlyWords = Regex.Matches(copy, @"([a-zA-Z]+)((\d|_)*([a-zA-Z]*))*"); //Only identifiers
             RemoveRecurrence(ref copy, listOnlyWords);
 
+            var listDecimals = Regex.Matches(copy, @"[0-9]+");
+            RemoveRecurrence(ref copy, listDecimals);
 
             var operators2 = Operator_A(t.Operators_Words(), 2);
             var listOperators2 = Regex.Matches(copy, @"" + operators2 + ""); //find single operators like = , . ! < > { } ( )
@@ -663,14 +668,17 @@ namespace minic.Class
             {
                 foreach (Match match in recurrences)
                 {
-                    var spaces = string.Empty;
-
-                    for (int i = 0; i < match.Value.Length; i++)
+                    if (match.Value != "")
                     {
-                        spaces += " ";
-                    }
+                        var spaces = string.Empty;
 
-                    copy = copy.Replace(match.Value, spaces);
+                        for (int i = 0; i < match.Value.Length; i++)
+                        {
+                            spaces += " ";
+                        }
+
+                        copy = copy.Replace(match.Value, spaces);
+                    }
                 }
             }
         }
