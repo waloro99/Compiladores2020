@@ -16,6 +16,7 @@ namespace minic
         // ----------------------------------------VAR GLOBAL-------------------------------------------
 
         public string PathFile = string.Empty; // var path the file
+        public List<Class.Type> FileScanner = new List<Class.Type>(); //list token
 
         //----------------------------------------- INTERFACE -----------------------------------------
 
@@ -71,14 +72,17 @@ namespace minic
         //buton Aceptar
         private void button2_Click(object sender, EventArgs e)
         {
+            //-------------------------------- PHASE 01
             Lexical_Analysis(); //begin
+            //-------------------------------- LAB 01
+            ASD_Recursive();
         }
 
         //---------------------------------------FUNCTIONS PUBLIC---------------------------------------
 
         #region Functions Public
 
-        //method to do Lexical Analysis
+        //method to do Lexical Analysis --> era privada
         public void Lexical_Analysis()
         {
             //instance class
@@ -98,7 +102,7 @@ namespace minic
             else
             {
                 //method for analysis
-                List<Class.Type> FileScanner = s.Scanner_Lexic(res);
+                FileScanner = s.Scanner_Lexic(res);
                 bool flag_error = false;
                 var errors = string.Empty;
                 //Show errors
@@ -131,7 +135,12 @@ namespace minic
         //---------------------------------------FUNCTIONS PRIVATE--------------------------------------
 
         #region Functions Private
-        
+        //Method to do Syntactic Analyis Decendant Recursive -->LAB A
+        private void ASD_Recursive()
+        {
+
+        }
+
         #endregion
 
 

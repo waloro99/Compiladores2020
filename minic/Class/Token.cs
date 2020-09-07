@@ -18,7 +18,7 @@ namespace minic.Class
 
         //var that contains reserved words
         public string sentence = "void int double bool string class const interface null this for while" +
-                                 " foreach if else return break New NewArray Console WriteLine";
+                                 " foreach if else return break New NewArray Console WriteLine Print"; //Add "Print" --> Lab A
 
         //method public that return the token reserved words
         public List<string> Reserved_Words()
