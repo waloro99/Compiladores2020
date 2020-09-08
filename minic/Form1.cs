@@ -138,6 +138,13 @@ namespace minic
         //Method to do Syntactic Analyis Decendant Recursive -->LAB A
         private void ASD_Recursive()
         {
+            //Instance class
+            ASDRecursivo asd = new ASDRecursivo();
+
+            //Find Error syntactic analysis
+            FileScanner = asd.ASDRecursivo_F(FileScanner);
+
+            //Show Error Syntactic
 
         }
 
