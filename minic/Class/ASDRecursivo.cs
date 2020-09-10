@@ -11,6 +11,7 @@ namespace minic.Class
         //---------------------------------------FUNCTIONS PUBLIC---------------------------------------
         public List<Type> t = new List<Type>(); //list witch tokens
         public string lookahad = string.Empty; //var global
+        public string Msg_Error = string.Empty;
 
         #region FUNCTIONS PUBLICS
 
@@ -32,7 +33,15 @@ namespace minic.Class
         private void ASDR_Flow()
         {
             //lookahad
+            F_lookahad();
+            //begin gramatic
             Parse_Program();
+        }
+
+        //Method to get the lookahad
+        private void F_lookahad()
+        {
+
         }
 
         //Method for know next token
