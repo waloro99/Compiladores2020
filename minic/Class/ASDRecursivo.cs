@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,18 +10,20 @@ namespace minic.Class
     public class ASDRecursivo
     {
         //---------------------------------------FUNCTIONS PUBLIC---------------------------------------
-        public List<Type> t = new List<Type>(); //list witch tokens
+        public List<Type> t = new List<Type>(); //list with tokens
+        public Type token = new Type(); //value the lookahad
         public string lookahad = string.Empty; //var global
         public string Msg_Error = string.Empty;
+        public int x = -1; //scroll var
 
         #region FUNCTIONS PUBLICS
 
         //method public 
-        public List<Type> ASDRecursivo_F(List<Type> tokens)
+        public string ASDRecursivo_F(List<Type> tokens)
         {
             t = tokens;
             ASDR_Flow();
-            return t;
+            return Msg_Error;
         }
 
         #endregion
@@ -33,21 +36,66 @@ namespace minic.Class
         private void ASDR_Flow()
         {
             //lookahad
-            F_lookahad();
+            lookahad = NextToken();
             //begin gramatic
             Parse_Program();
-        }
-
-        //Method to get the lookahad
-        private void F_lookahad()
-        {
-
         }
 
         //Method for know next token
         private string NextToken()
         {
-            return null;
+            x++; //increment var
+            if (x < t.Count())
+            {
+                token = t[x];
+            }
+            //save type 
+            string l = F_Lookahad(token);
+            return l;
+        }
+
+        private string F_Lookahad(Type T_token)
+        {
+            if (T_token.description.Contains("T_Bool"))
+            {
+                return "boolConstant";
+            }
+            else if (T_token.description.Contains("T_IntConst"))
+            {
+                return "intConstant";
+            }
+            else if (T_token.description.Contains("T_DoubleConst"))
+            {
+                return "doubleConstant";
+            }
+            else if (T_token.description.Contains("T_DoubleExpConst")) //--> idk
+            {
+                return "doubleConstant";
+            }
+            else if (T_token.description.Contains("T_Operator"))
+            {
+                return T_token.cadena;
+            }
+            else if (T_token.description.Contains("T_Hexadecimal"))
+            {
+                return "hexaConstant";
+            }
+            else if (T_token.description.Contains("T_Identifier"))
+            {
+                return "identificador";
+            }
+            else if (T_token.description.Contains("T_StringConstant"))
+            {
+                return "stringConstant";
+            }
+            else if (T_token.description.Contains("T_"))
+            {
+                return T_token.cadena;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         //Method for know match the token

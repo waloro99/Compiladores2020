@@ -140,11 +140,13 @@ namespace minic
         {
             //Instance class
             ASDRecursivo asd = new ASDRecursivo();
-
+            
             //Find Error syntactic analysis
-            FileScanner = asd.ASDRecursivo_F(FileScanner);
+            string Msg_Error = asd.ASDRecursivo_F(FileScanner);
 
             //Show Error Syntactic
+            MessageBox.Show(Msg_Error, "Error ASDR:", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
 
         }
 
