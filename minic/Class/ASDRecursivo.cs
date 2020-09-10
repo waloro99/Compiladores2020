@@ -63,13 +63,22 @@ namespace minic.Class
         //Decl → VariableDecl Decl’ | FunctionDecl Decl’
         private void Parse_Decl()
         {
-
+            Parse_VariableDecl();
+            Parse_DeclP();
+            //else
+            Parse_FunctionDecl();
+            Parse_DeclP();
         }
 
         //Decl’ → VariableDecl Decl’ | FunctionDecl Decl’ | eps
         private void Parse_DeclP()
         {
-
+            Parse_VariableDecl();
+            Parse_DeclP();
+            //else
+            Parse_FunctionDecl();
+            Parse_DeclP();
+            //else eps
         }
 
         //VariableDecl  → Variable ;
@@ -123,7 +132,6 @@ namespace minic.Class
             }
          
         }
-
 
         //FunctionDecl → Type ident ( Formals ) Stmt’ | void ident ( Formals ) Stmt’
         private void Parse_FunctionDecl()
@@ -186,25 +194,241 @@ namespace minic.Class
             //else if forstms
             Parse_ForStmt();
             //else expr
+            Parse_Expr();
+            MatchToken(";");
             //else error
         }
 
         //IfStmt → if ( Expr ) Stmt IfStmt’
         private void Parse_IfStmt()
         {
-
+            MatchToken("if");
+            MatchToken("(");
+            Parse_Expr();
+            MatchToken(")");
+            Parse_Stmt();
+            Parse_IfStmtP();
         }
 
         //IfStmt’ → else Stmt | eps
         private void Parse_IfStmtP()
         {
-
+            if (lookahad == "else")
+            {
+                MatchToken("else");
+                Parse_Stmt();
+            }
+            //eps
         }
 
         //ForStmt → for ( ForStmt’  ; Expr ; ForStmt’  ) Stmt
         private void Parse_ForStmt()
         {
+            MatchToken("for");
+            MatchToken("(");
+            Parse_ForStmtP();
+            MatchToken(";");
+            Parse_Expr();
+            MatchToken(";");
+            Parse_ForStmtP();
+            MatchToken(")");
+            Parse_Stmt();
+        }
 
+        //ForStmt’ → Expr | eps
+        private void Parse_ForStmtP()
+        {
+            // if Expr
+            Parse_Expr();
+            // else eps
+        }
+
+        //Expr →  Expr’ Expr1
+        private void Parse_Expr()
+        {
+            Parse_ExprP();
+            Parse_Expr1();
+        }
+
+        //Expr1 → || Expr’ Expr1 | eps
+        private void Parse_Expr1()
+        {
+            MatchToken("||");
+            Parse_ExprP();
+            Parse_Expr1();
+            //else eps
+        }
+
+        //Expr’ → Expr2’ Expr2
+        private void Parse_ExprP()
+        {
+            Parse_Expr2P();
+            Parse_Expr2();
+        }
+
+        //Expr2 → && Expr2’ Expr2 | eps
+        private void Parse_Expr2()
+        {
+            MatchToken("&&");
+            Parse_Expr2P();
+            Parse_Expr2();
+            //else eps
+        }
+
+        //Expr2’ → Expr3’ Expr3
+        private void Parse_Expr2P()
+        {
+            Parse_Expr3P();
+            Parse_Expr3();
+        }
+
+        //Expr3 → == Expr3’ Expr3 | != Expr3’ Expr3 | eps
+        private void Parse_Expr3()
+        {
+            MatchToken("==");
+            Parse_Expr3P();
+            Parse_Expr3();
+            //else 
+            MatchToken("!=");
+            Parse_Expr3P();
+            Parse_Expr3();
+            //else eps
+        }
+
+        //Expr3’ → Expr4’ Expr4
+        private void Parse_Expr3P()
+        {
+            Parse_Expr4P();
+            Parse_Expr4();
+        }
+
+        //Expr4 → < Expr4’ Expr4 | > Expr4’ Expr4 | <= Expr4’ Expr4 | >= Expr4’ Expr4 | eps
+        private void Parse_Expr4()
+        {
+            MatchToken("<");
+            Parse_Expr4P();
+            Parse_Expr4();
+            //else 
+            MatchToken(">");
+            Parse_Expr4P();
+            Parse_Expr4();
+            //else 
+            MatchToken("<=");
+            Parse_Expr4P();
+            Parse_Expr4();
+            //else 
+            MatchToken(">=");
+            Parse_Expr4P();
+            Parse_Expr4();
+            //else eps
+        }
+
+        //Expr4’ →  Expr5’ Expr5
+        private void Parse_Expr4P()
+        {
+            Parse_Expr5P();
+            Parse_Expr5();
+        }
+
+        //Expr5 → + Expr5’ Expr5 | - Expr5’ Expr5 | eps
+        private void Parse_Expr5()
+        {
+            MatchToken("+");
+            Parse_Expr5P();
+            Parse_Expr5();
+            //else 
+            MatchToken("-");
+            Parse_Expr5P();
+            Parse_Expr5();
+            //else eps
+        }
+
+        //Expr5’ → Expr6’ Expr6
+        private void Parse_Expr5P()
+        {
+            Parse_Expr6P();
+            Parse_Expr6();
+        }
+
+        //Expr6 → * Expr6’ Expr6 | / Expr6’ Expr6 | % Expr6’ Expr6 | eps
+        private void Parse_Expr6()
+        {
+            MatchToken("*");
+            Parse_Expr6P();
+            Parse_Expr6();
+            //else 
+            MatchToken("/");
+            Parse_Expr6P();
+            Parse_Expr6();
+            //else 
+            MatchToken("%");
+            Parse_Expr6P();
+            Parse_Expr6();
+            //else eps
+        }
+
+        //Expr6’ → LValue = Expr |  Constant | LValue | this | - Expr | ! Expr | ( Expr ) |  New (ident) | eps
+        private void Parse_Expr6P()
+        {
+            Parse_LValue();
+            MatchToken("=");
+            Parse_Expr();
+            //else
+            Parse_Constant();
+            //else
+            Parse_LValue();
+            //else
+            MatchToken("this");
+            //else
+            MatchToken("-");
+            Parse_Expr();
+            //else
+            MatchToken("!");
+            Parse_Expr();
+            //else
+            MatchToken("(");
+            Parse_Expr();
+            MatchToken(")");
+            //else
+            MatchToken("New");
+            MatchToken("(");
+            MatchToken("identificador");
+            MatchToken(")");
+            //else eps
+
+        }
+
+        //LValue → ident | Expr LValue’
+        private void Parse_LValue()
+        {
+            MatchToken("identificador");
+            //else
+            Parse_Expr();
+            Parse_LValueP();
+        }
+
+        //LValue’ → . ident | [ Expr ]
+        private void Parse_LValueP()
+        {
+            MatchToken(".");
+            MatchToken("identificador");
+            //else
+            MatchToken("[");
+            Parse_Expr();
+            MatchToken("]");
+        }
+
+        //Constant → intConstant | doubleConstant | boolConstant | stringConstant | null
+        private void Parse_Constant()
+        {
+            MatchToken("intConstant");
+            //else
+            MatchToken("doubleConstant");
+            //else
+            MatchToken("boolConstant");
+            //else
+            MatchToken("stringConstant");
+            //else eps
         }
 
         #endregion
