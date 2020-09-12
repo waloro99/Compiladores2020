@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace minic.Class
@@ -15,6 +17,8 @@ namespace minic.Class
         public string lookahad = string.Empty; //var global
         public string Msg_Error = string.Empty;
         public int x = -1; //scroll var
+
+        public bool flagError = false;
 
         #region FUNCTIONS PUBLICS
 
@@ -99,197 +103,281 @@ namespace minic.Class
         }
 
         //Method for know match the token
-        private void MatchToken(string token)
+        private string MatchToken(string token, bool sTerminal)
         {
-            if (lookahad ==  token)
+            if (lookahad == token)
             {
                 lookahad = NextToken();
+                return "";
             }
-            else
+            //ERROR
+            if (sTerminal)
             {
-                //ERROR
+                Msg_Error += "\n" + lookahad;
+                lookahad = NextToken();
+                return "";
             }
+            return "Undefined";
         }
 
         //Program → Decl
         private void Parse_Program()
         {
-            Parse_Decl();
+            while (lookahad != "")
+            {
+                Parse_Decl();
+            }
+
         }
 
         //Decl → VariableDecl Decl’ | FunctionDecl Decl’
         private void Parse_Decl()
         {
-            Parse_VariableDecl();
-            Parse_DeclP();
+            if (Parse_VariableDecl() == "Undefined")
+            {
+                if (Parse_FunctionDecl() == "Undefined")
+                {
+                    Parse_DeclP();
+                    Msg_Error += lookahad;
+                    lookahad = NextToken();
+                    
+                }
+            }
+            
             //else
-            Parse_FunctionDecl();
-            Parse_DeclP();
+
+            //Parse_DeclP();
         }
 
         //Decl’ → VariableDecl Decl’ | FunctionDecl Decl’ | eps
-        private void Parse_DeclP()
+        private string Parse_DeclP()
         {
-            Parse_VariableDecl();
-            Parse_DeclP();
-            //else
-            Parse_FunctionDecl();
-            Parse_DeclP();
-            //else eps
+            if (Parse_VariableDecl() != "Undefined")
+            {
+                return Parse_DeclP();
+            }
+
+            if (Parse_FunctionDecl() != "Undefined")
+            {
+                return Parse_DeclP();
+            }
+
+            return "";
         }
 
         //VariableDecl  → Variable ;
-        private void Parse_VariableDecl()
+        private string Parse_VariableDecl()
         {
-            Parse_Variable();
-            MatchToken(";");
+            if (Parse_Variable() != "Undefined")
+            {
+                if (lookahad != "(" && lookahad != ")")
+                {
+                    return MatchToken(";", true);
+                }
+                return MatchToken(";", false);
+            }
+
+            return "Undefined";
+
         }
 
         //Variable → Type ident
-        private void Parse_Variable()
+        private string Parse_Variable()
         {
-            Parse_Type();
-            MatchToken("identificador"); //change name
+            if (Parse_Type() != "Undefined")
+            {
+                return MatchToken("identificador", true); //change name
+            }
+            return "Undefined";
         }
 
         //Type → Type’ Type2
-        private void Parse_Type()
+        private string Parse_Type()
         {
-            Parse_TypeP();
-            Parse_Type2();
+            if (Parse_TypeP() == "Undefined")
+            {
+                return "Undefined";
+            }
+            if (Parse_Type2() == "Undefined")
+            {
+                return "";
+            }
+            return "";
         }
 
         //Type’ → int | double | bool | string | ident
-        private void Parse_TypeP()
+        private string Parse_TypeP()
         {
             if (lookahad == "int")
-                MatchToken("int");
+            {
+                lookahad = NextToken();
+                return "";
+            }
             else if (lookahad == "double")
-                MatchToken("double");
+            {
+                lookahad = NextToken();
+                return "";
+            }
             else if (lookahad == "bool")
-                MatchToken("bool");
+            {
+                lookahad = NextToken();
+                return "";
+            }
             else if (lookahad == "string")
-                MatchToken("string");
+            {
+                lookahad = NextToken();
+                return "";
+            }
             else if (lookahad == "identificador")
-                MatchToken("identificador");
-            //else error
+            {
+                lookahad = NextToken();
+                return "";
+            }
+            //else error -- DONE
+            return "Undefined";
         }
 
         //Type2 → [] Type2 | eps
-        private void Parse_Type2()
+        private string Parse_Type2()
         {
-            if (lookahad == "[]")
-            {
-                MatchToken("[]");
-                Parse_Type2();
-            }
-            else
-            {
-                //eps
-            }
-         
+            return MatchToken("[]", false);
         }
 
         //FunctionDecl → Type ident ( Formals ) Stmt’ | void ident ( Formals ) Stmt’
-        private void Parse_FunctionDecl()
+        private string Parse_FunctionDecl()
         {
             if (lookahad != "void")
             {
-                Parse_Type();
-                MatchToken("identificador");
-                MatchToken("(");
+                if (lookahad != "(")
+                {
+                    Parse_Type();
+                    MatchToken("identificador", true);
+                }
+                MatchToken("(", true);
                 Parse_Formals();
-                MatchToken(")");
+                MatchToken(")", true);
                 Parse_StmtP();
             }
             else if (lookahad == "void")
             {
-                MatchToken("void");
-                MatchToken("identificador");
-                MatchToken("(");
+                MatchToken("void", true);
+                MatchToken("identificador", true);
+                MatchToken("(", true);
                 Parse_Formals();
-                MatchToken(")");
-                Parse_StmtP();
+                MatchToken(")", true);
             }
-            else
-            {
-                //error
-            }
+            return "Undefined";
 
         }
 
         //Stmt’ → Stmt Stmt’ | eps
-        private void Parse_StmtP()
+        private string Parse_StmtP()
         {
-            Parse_Stmt();
-            Parse_StmtP();
+            if (Parse_Stmt() == "Undefined")
+            {
+                return "";
+            }
+            else if (Parse_StmtP() == "Undefined")
+            {
+                return "";
+            }
+            else
+            {
+                return "Undefined";
+            }
+
             //else eps
         }
 
         //Formals → Variable Variable’ , | eps
-        private void Parse_Formals()
+        private string Parse_Formals()
         {
-            Parse_Variable();
-            Parse_VariableP();
-            MatchToken(",");
-            //else eps
+            if (Parse_Variable() != "Undefined")
+            {
+                if (Parse_VariableP() == "Undefined")
+                {
+                    return "";
+                }
+                else if (Parse_VariableP() != "Undefined")
+                {
+                    return MatchToken(",", true);
+                }
+            }
+
+            //else eps -- Done
+            return "";
         }
 
-        //Variable’ →  Variable Variable’ | eps
-        private void Parse_VariableP()
+        ////Variable’ →  Variable Variable’ | eps
+        private string Parse_VariableP()
         {
-            Parse_Variable();
-            Parse_VariableP();
+            if (Parse_Variable() == "Undefined")
+            {
+                return "Undefined";
+            }
+
+            return "";
             //else eps
         }
 
         //Stmt → IfStmt | ForStmt | Expr ;
-        private void Parse_Stmt()
+        private string Parse_Stmt()
         {
             //if ifstmt
-            Parse_IfStmt();
-            //else if forstms
-            Parse_ForStmt();
-            //else expr
-            Parse_Expr();
-            MatchToken(";");
-            //else error
+            if (Parse_IfStmt() == "Undefined")
+            {
+                if (Parse_ForStmt() != "Undefined")
+                {
+                    if (Parse_Expr() != "Undefined")
+                    {
+                        return MatchToken(";", true);
+                    }
+                }
+            }
+            //else error--DONE
+            return "Undefined";
         }
 
         //IfStmt → if ( Expr ) Stmt IfStmt’
-        private void Parse_IfStmt()
+        private string Parse_IfStmt()
         {
-            MatchToken("if");
-            MatchToken("(");
-            Parse_Expr();
-            MatchToken(")");
-            Parse_Stmt();
-            Parse_IfStmtP();
+            if (MatchToken("if", false) != "Undefined")
+            {
+                MatchToken("(", true);
+                Parse_Expr();
+                MatchToken(")", true);
+                Parse_Stmt();
+                Parse_IfStmtP();
+                return "";
+            }
+            return "Undefined";
         }
 
         //IfStmt’ → else Stmt | eps
-        private void Parse_IfStmtP()
+        private string Parse_IfStmtP()
         {
-            if (lookahad == "else")
+            if (MatchToken("else", false) != "Undefined")
             {
-                MatchToken("else");
-                Parse_Stmt();
+                return Parse_Stmt();
             }
             //eps
+            return "";
         }
 
         //ForStmt → for ( ForStmt’  ; Expr ; ForStmt’  ) Stmt
-        private void Parse_ForStmt()
+        private string Parse_ForStmt()
         {
-            MatchToken("for");
-            MatchToken("(");
-            Parse_ForStmtP();
-            MatchToken(";");
-            Parse_Expr();
-            MatchToken(";");
-            Parse_ForStmtP();
-            MatchToken(")");
-            Parse_Stmt();
+            if (MatchToken("for", false) != "Undefined")
+            {
+                MatchToken("(", true);
+                Parse_ForStmtP();
+                Parse_Expr();
+                MatchToken(";", true);
+                Parse_ForStmtP();
+                MatchToken(")", true);
+                Parse_Stmt();
+            }
+            return "";
         }
 
         //ForStmt’ → Expr | eps
@@ -301,193 +389,264 @@ namespace minic.Class
         }
 
         //Expr →  Expr’ Expr1
-        private void Parse_Expr()
+        private string Parse_Expr()
         {
             Parse_ExprP();
-            Parse_Expr1();
+            return Parse_Expr1();
+
         }
 
         //Expr1 → || Expr’ Expr1 | eps
-        private void Parse_Expr1()
+        private string Parse_Expr1()
         {
-            MatchToken("||");
-            Parse_ExprP();
-            Parse_Expr1();
+            if (MatchToken("||", false) != "Undefined")
+            {
+                Parse_ExprP();
+                return Parse_Expr1();
+            }
             //else eps
+            return "";
         }
 
         //Expr’ → Expr2’ Expr2
-        private void Parse_ExprP()
+        private string Parse_ExprP()
         {
             Parse_Expr2P();
-            Parse_Expr2();
+            return Parse_Expr2();
         }
 
         //Expr2 → && Expr2’ Expr2 | eps
-        private void Parse_Expr2()
+        private string Parse_Expr2()
         {
-            MatchToken("&&");
-            Parse_Expr2P();
-            Parse_Expr2();
+            if (MatchToken("&&", false) != "Undefined")
+            {
+                Parse_Expr2P();
+                return Parse_Expr2();
+            }
+
+            return "";
             //else eps
         }
 
         //Expr2’ → Expr3’ Expr3
-        private void Parse_Expr2P()
+        private string Parse_Expr2P()
         {
             Parse_Expr3P();
-            Parse_Expr3();
+            return Parse_Expr3();
         }
 
         //Expr3 → == Expr3’ Expr3 | != Expr3’ Expr3 | eps
-        private void Parse_Expr3()
+        private string Parse_Expr3()
         {
-            MatchToken("==");
-            Parse_Expr3P();
-            Parse_Expr3();
+            if (MatchToken("==", false) != "Undefined")
+            {
+                Parse_Expr3P();
+                return Parse_Expr3();
+            }
+            else if (MatchToken("!=", false) != "Undefined")
+            {
+                Parse_Expr3P();
+                return Parse_Expr3();
+            }
             //else 
-            MatchToken("!=");
-            Parse_Expr3P();
-            Parse_Expr3();
+            return "";
             //else eps
         }
 
         //Expr3’ → Expr4’ Expr4
-        private void Parse_Expr3P()
+        private string Parse_Expr3P()
         {
             Parse_Expr4P();
-            Parse_Expr4();
+            return Parse_Expr4();
         }
 
         //Expr4 → < Expr4’ Expr4 | > Expr4’ Expr4 | <= Expr4’ Expr4 | >= Expr4’ Expr4 | eps
-        private void Parse_Expr4()
+        private string Parse_Expr4()
         {
-            MatchToken("<");
-            Parse_Expr4P();
-            Parse_Expr4();
+            if (MatchToken("<", false) != "Undefined")
+            {
+                Parse_Expr4P();
+                return Parse_Expr4();
+            }
+            if (MatchToken(">", false) != "Undefined")
+            {
+                Parse_Expr4P();
+                return Parse_Expr4();
+            }
+            if (MatchToken("<=", false) != "Undefined")
+            {
+                Parse_Expr4P();
+                return Parse_Expr4();
+            }
+            if (MatchToken(">=", false) != "Undefined")
+            {
+                Parse_Expr4P();
+                return Parse_Expr4();
+            }
             //else 
-            MatchToken(">");
-            Parse_Expr4P();
-            Parse_Expr4();
-            //else 
-            MatchToken("<=");
-            Parse_Expr4P();
-            Parse_Expr4();
-            //else 
-            MatchToken(">=");
-            Parse_Expr4P();
-            Parse_Expr4();
-            //else eps
+            return "";
         }
 
         //Expr4’ →  Expr5’ Expr5
-        private void Parse_Expr4P()
+        private string Parse_Expr4P()
         {
             Parse_Expr5P();
-            Parse_Expr5();
+            return Parse_Expr5();
         }
 
         //Expr5 → + Expr5’ Expr5 | - Expr5’ Expr5 | eps
-        private void Parse_Expr5()
+        private string Parse_Expr5()
         {
-            MatchToken("+");
-            Parse_Expr5P();
-            Parse_Expr5();
-            //else 
-            MatchToken("-");
-            Parse_Expr5P();
-            Parse_Expr5();
-            //else eps
+            if (MatchToken("+", false) != "Undefined")
+            {
+                Parse_Expr5P();
+                return Parse_Expr5();
+            }
+            else if (MatchToken("-", false) != "Undefined")
+            {
+                Parse_Expr5P();
+                return Parse_Expr5();
+            }
+            return "";
         }
 
         //Expr5’ → Expr6’ Expr6
-        private void Parse_Expr5P()
+        private string Parse_Expr5P()
         {
             Parse_Expr6P();
-            Parse_Expr6();
+            return Parse_Expr6();
         }
 
         //Expr6 → * Expr6’ Expr6 | / Expr6’ Expr6 | % Expr6’ Expr6 | eps
-        private void Parse_Expr6()
+        private string Parse_Expr6()
         {
-            MatchToken("*");
-            Parse_Expr6P();
-            Parse_Expr6();
-            //else 
-            MatchToken("/");
-            Parse_Expr6P();
-            Parse_Expr6();
-            //else 
-            MatchToken("%");
-            Parse_Expr6P();
-            Parse_Expr6();
-            //else eps
+            if (MatchToken("*", false) != "Undefined")
+            {
+                Parse_Expr6P();
+                return Parse_Expr6();
+            }
+            else if (MatchToken("/", false) != "Undefined")
+            {
+                Parse_Expr6P();
+                return Parse_Expr6();
+            }
+            else if (MatchToken("%", false) != "Undefined")
+            {
+                Parse_Expr6P();
+                return Parse_Expr6();
+            }
+            return "";
         }
 
         //Expr6’ → LValue = Expr |  Constant | LValue | this | - Expr | ! Expr | ( Expr ) |  New (ident) | eps
-        private void Parse_Expr6P()
+        private string Parse_Expr6P()
         {
-            Parse_LValue();
-            MatchToken("=");
-            Parse_Expr();
-            //else
-            Parse_Constant();
-            //else
-            Parse_LValue();
-            //else
-            MatchToken("this");
-            //else
-            MatchToken("-");
-            Parse_Expr();
-            //else
-            MatchToken("!");
-            Parse_Expr();
-            //else
-            MatchToken("(");
-            Parse_Expr();
-            MatchToken(")");
-            //else
-            MatchToken("New");
-            MatchToken("(");
-            MatchToken("identificador");
-            MatchToken(")");
+            if (Parse_LValue() != "Undefined" && MatchToken("=", false) == "")
+            {
+                return Parse_Expr();
+            }
+            else if (Parse_Constant() == "Undefined")
+            {
+                if (Parse_LValue() == "Undefined")
+                {
+                    if (MatchToken("this", false) == "Undefined")
+                    {
+                        if (MatchToken("-", false) != "Undefined")
+                        {
+                            Parse_Expr();
+                        }
+                        else if (MatchToken("!", false) != "Undefined")
+                        {
+                            Parse_Expr();
+                        }
+                        else if (MatchToken("(", false) != "Undefined")
+                        {
+                            Parse_Expr();
+                            MatchToken(")", false);
+                        }
+                        else if (MatchToken("New", false) != "Undefined")
+                        {
+                            MatchToken("(", true);
+                            MatchToken("identificador", true);
+                            MatchToken(")", true);
+                        }
+                    }
+                }
+            }
+            return "";
             //else eps
 
         }
 
         //LValue → ident | Expr LValue’
-        private void Parse_LValue()
+        private string Parse_LValue()
         {
-            MatchToken("identificador");
-            //else
-            Parse_Expr();
-            Parse_LValueP();
+            if (MatchToken("identificador", false) == "Undefined" && lookahad != "intConstant" && lookahad != "doubleConstant" && lookahad != "boolConstant" && lookahad != "stringConstant")
+            {
+                if (Parse_Expr() != "Undefined")
+                {
+                    return Parse_LValueP();
+                }
+                else
+                {
+                    return "Undefined";
+                }
+            }
+            return "";
+
         }
 
         //LValue’ → . ident | [ Expr ]
-        private void Parse_LValueP()
+        private string Parse_LValueP()
         {
-            MatchToken(".");
-            MatchToken("identificador");
-            //else
-            MatchToken("[");
-            Parse_Expr();
-            MatchToken("]");
+            if (MatchToken(".", false) != "Undefined")
+            {
+                MatchToken("identificador", true);
+                return "";
+            }
+            else if (MatchToken("[", true) != "Undefined")
+            {
+                Parse_Expr();
+                MatchToken("]", true);
+                return "";
+            }
+            return "Undefined";
         }
 
         //Constant → intConstant | doubleConstant | boolConstant | stringConstant | null
-        private void Parse_Constant()
+        private string Parse_Constant()
         {
-            MatchToken("intConstant");
-            //else
-            MatchToken("doubleConstant");
-            //else
-            MatchToken("boolConstant");
-            //else
-            MatchToken("stringConstant");
-            //else eps
+            if (MatchToken("intConstant", false) == "Undefined")
+            {
+                if (MatchToken("doubleConstant", false) == "Undefined")
+                {
+                    if (MatchToken("boolConstant", false) == "Undefined")
+                    {
+                        if (MatchToken("stringConstant", false) == "Undefined")
+                        {
+                            return "";
+                        }
+                        else if (MatchToken("null", false) != "Undefined")
+                        {
+                            return "";
+                        }
+                    }
+                    else
+                    {
+                        return "";
+                    }
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            else
+            {
+                return "";
+            }
+            return "Undefined";
         }
-
         #endregion
     }
 }
