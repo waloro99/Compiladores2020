@@ -140,7 +140,7 @@ namespace minic
         {
             //Instance class
             ASDRecursivo asd = new ASDRecursivo();
-            
+
             //Find Error syntactic analysis
             string Msg_Error = asd.ASDRecursivo_F(FileScanner);
 
@@ -154,8 +154,6 @@ namespace minic
             {
                 MessageBox.Show("Correct Sintaxis", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
-
         }
 
         #endregion
