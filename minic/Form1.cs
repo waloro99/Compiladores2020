@@ -145,7 +145,15 @@ namespace minic
             string Msg_Error = asd.ASDRecursivo_F(FileScanner);
 
             //Show Error Syntactic
-            MessageBox.Show(Msg_Error, "Error ASDR:", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            if (Msg_Error != "")
+            {
+                MessageBox.Show(Msg_Error, "Error ASDR:", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                MessageBox.Show("Correct Sintaxis", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
 
 
         }
