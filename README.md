@@ -9,7 +9,7 @@ El laboratorio consistia en realizar un Analisis Sintactico Descendente Recursiv
 
 - El analizador de MiniC cuenta con un manejo de errores el cual consiste en una gramática que se va verificando con la información que contiene el archivo y realizando recursividad en cada uno de los parseos, para realizar un match entre el token esperado y el token que se esta leyendo del archivo, si en dado caso no realiza el match entonces se producira un error.
 - Luego de encontrar el error el programa se recupera de la siguiente forma, guarda el error que se encontro respecto a los match token y luego realiza con un nuevo token el parseo nuevamente para que el programa siga con su flujo y este no se quede parado.
--La estrategia implementada para este laboratorio consistio de primero realizar una revision de la gramática, rediseñarla y luego realizar los parseos respecto a los no terminales y realizar un lookahad, un mathtoken y un backtracking para manejar los errores y verificar uno a uno la entrada de cada token del archivo analizado con el flujo del programa.
+- La estrategia implementada para este laboratorio consistio de primero realizar una revision de la gramática, rediseñarla y luego realizar los parseos respecto a los no terminales y realizar un lookahad, un mathtoken y un backtracking para manejar los errores y verificar uno a uno la entrada de cada token del archivo analizado con el flujo del programa. 
 
 # Gramática Original :bulb:
 
