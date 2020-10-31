@@ -73,7 +73,7 @@ namespace minic
         private void button2_Click(object sender, EventArgs e)
         {
 
-            var analizador = new LR1();
+            //var analizador = new LR1();
 
             //-------------------------------- PHASE 01
             Lexical_Analysis(); //begin

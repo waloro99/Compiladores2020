@@ -218,9 +218,18 @@ namespace minic.Class.Fase_2
                 case "T_Operator":
                     itemtoSearch = type.cadena;
                     break;
-
+                case "$":
+                    itemtoSearch = type.cadena;
+                    break;
                 default:
-                    itemtoSearch = type.description.Replace("T_", "");
+                    if (type.description.Contains("T_"))
+                    {
+                        itemtoSearch = type.description.Replace("T_", "");
+                    }
+                    else
+                    {
+                        itemtoSearch = type.description;
+                    }
                     break;
             }
 

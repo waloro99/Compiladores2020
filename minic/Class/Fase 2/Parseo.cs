@@ -9,11 +9,11 @@ namespace minic.Class.Fase_2
     public class Parseo
     {
 
-        public Stack<int> pila; // la pila guarda los estados de la tabla de analisis
-        public List<Type> simbolo; // aqui guarda los datos que se van ingresando
-        public Stack<string> accion; //se va guardando las acciones que va realizando los parseos
+        public Stack<int> pila = new Stack<int>(); // la pila guarda los estados de la tabla de analisis
+        public List<Type> simbolo = new List<Type>(); // aqui guarda los datos que se van ingresando
+        public Stack<string> accion = new Stack<string>(); //se va guardando las acciones que va realizando los parseos
         public string errores; //guarda los valores encontrados
-        public Queue<Type> entrada;
+        public Queue<Type> entrada =  new Queue<Type>();
         //banderas para controlar el flujo
         bool f_inicio = true, f_desplazar = false, f_reducir = false, f_irA = false, f_aceptar = false, f_error = false;
 
@@ -66,7 +66,8 @@ namespace minic.Class.Fase_2
                     //se sabe que cuando hay una reduccion se continua un ir_A
                     f_reducir = false;
                     p = pila.Peek(); //obtenemos el top de la pila
-                    acc = MetodoFalso(p, Ir_A()); //obtenemos el ultimo valor de Simbolo
+                    Type a = Ir_A();
+                    acc = MetodoFalso(p, a); //obtenemos el ultimo valor de Simbolo
                     datos = SplitAction(acc);//obtiene accion y estado
                     accion.Push(datos[0]); //guardo la accion
                     FlagAccion(datos[0]); //activo la accion en este caso deberia de enviar IR_A
@@ -135,7 +136,7 @@ namespace minic.Class.Fase_2
             newType.column_I = 0;
             newType.column_F = 0;
             newType.Error = "";
-            newType.description = "FIN";
+            newType.description = "$";
             res.Add(newType);
             return res;
 
@@ -179,7 +180,7 @@ namespace minic.Class.Fase_2
             {
                 f_irA = true;
             }
-            else if (accion == "acpetar")
+            else if (accion == "aceptar")
             {
                 f_aceptar = true;
             }
@@ -201,14 +202,16 @@ namespace minic.Class.Fase_2
             //se eliminan los ultimos valores de la lista simbolos dependiendo del numero de arriba
             simbolo.Reverse();//le doy vuelta a la lista simbolos
             int x = 0;
-            foreach (var item in simbolo)
+
+            for (int i = 0; i < simbolo.Count; i++)
             {
                 if (x < count)
                 {
-                    simbolo.Remove(item);
+                    simbolo.Remove(simbolo[i]);
                     x++;
                 }
             }
+
             simbolo.Reverse();//la regreso a la normalidad
             //Se agrega el simbolo no terminal a la lista de simbolos
             Type t = new Type();
@@ -240,6 +243,7 @@ namespace minic.Class.Fase_2
         private string[] SplitAction(string acc) 
         {
             string[] res = new string[2];
+            char c = acc[0];
             if (acc == "aceptar")
             {
                 res[0] = "aceptar";
@@ -250,19 +254,21 @@ namespace minic.Class.Fase_2
                 res[0] = "error";
                 res[1] = 0.ToString();
             }
+            else if (c == 'd')
+            {
+                res[0] = "desplazar";
+                acc = acc.Remove(0, 1);
+                res[1] = acc;
+            }
+            else if (c == 'r')
+            {
+                res[0] = "reducir";
+                acc = acc.Remove(0, 1);
+                res[1] = acc;
+            }
             else 
             {
-                char c = acc[0];
-                if (c == 'd')
-                {
-                    res[0] = "desplazar";
-                    acc.TrimStart('d');
-                }
-                else if (c == 'r')
-                {
-                    res[0] = "reducir";
-                    acc.TrimStart('r');
-                }
+                res[0] = "irA";
                 res[1] = acc;
             }
 
