@@ -234,5 +234,10 @@ namespace minic.Class.Fase_2
 
             return action;
         }
+
+        public Production GetState(int index)
+        {
+            return Grammar[index];
+        }
     }
 }
