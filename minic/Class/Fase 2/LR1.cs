@@ -31,6 +31,11 @@ namespace minic.Class.Fase_2
                 if (File.Exists(PathTable))
                 {
                     setAnalysisTable(PathTable);
+
+                    if (!VerifyTable())
+                    {
+                        throw new Exception("Error to read 'Analysis Table' file");
+                    }
                 }
                 else
                 {
@@ -182,6 +187,21 @@ namespace minic.Class.Fase_2
                     }
                 }
             }
+        }
+
+        private bool VerifyTable()
+        {
+            var len = AnalysisTable[0].Actions.Count;
+
+            foreach (var row in AnalysisTable)
+            {
+                if (row.Actions.Count != len)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
