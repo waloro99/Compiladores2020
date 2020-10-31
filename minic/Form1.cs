@@ -79,6 +79,8 @@ namespace minic
             Lexical_Analysis(); //begin
             //-------------------------------- LAB 01
             //ASD_Recursive();
+            //-------------------------------- PHASE 2
+            AS_LR1();
         }
 
         //---------------------------------------FUNCTIONS PUBLIC---------------------------------------
@@ -152,6 +154,25 @@ namespace minic
             if (Msg_Error != "")
             {
                 MessageBox.Show(Msg_Error, "Error ASDR:", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                MessageBox.Show("Correct Sintaxis", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        //Method to do Syntactic Analyis  --> PHASE 2
+        private void AS_LR1() 
+        {
+            Parseo parseo = new Parseo();
+            //Find Error syntactic analysis
+            string Msg_Error = parseo.Tabla_parseo(FileScanner);
+
+            //Show Error Syntactic
+
+            if (Msg_Error != "")
+            {
+                MessageBox.Show(Msg_Error, "Error LR1:", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
