@@ -228,7 +228,7 @@ namespace minic.Class.Fase_2
             {
                 if (row.Match.Equals(itemtoSearch))
                 {
-                    return row.Actions[state - 1];
+                    return row.Actions[state];
                 }   
             }
 
