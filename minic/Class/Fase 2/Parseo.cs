@@ -108,21 +108,20 @@ namespace minic.Class.Fase_2
                 else if (f_aceptar == true)
                 {
                     //Significa que termino todo bien solo hay que verificar despues del while que no exista otra cadena
+                    entrada.Dequeue(); //salida de $
                 }
 
                 else if (f_error == true)
                 {
-
+                    Type n_error = new Type();
+                    n_error = entrada.Peek();
+                    error = "Linea: "+ n_error.linea +" Columna: "+ n_error.column_I +" - "+ n_error.column_F + " Simbolo: "+ n_error.cadena +"    Error: No se esperaba este simbolo.";
+                    entrada.Clear();
                 }
 
             }
 
-            if (f_aceptar == true)
-            {
-                return error;
-            }
-
-            return "Por algun motivo fallo.";
+            return error;
 
         }
 
@@ -199,20 +198,33 @@ namespace minic.Class.Fase_2
             produccion = lr1.GetState(p);
             //Se pregunta cuantos simbolos produce y se guarda en una variable
             int count = produccion.Lista_elementos.Count;
-            //se eliminan los ultimos valores de la lista simbolos dependiendo del numero de arriba
-            simbolo.Reverse();//le doy vuelta a la lista simbolos
-            int x = 0;
-
-            for (int i = 0; i < simbolo.Count; i++)
+            bool f = false;
+            foreach (var item in produccion.Lista_elementos)
             {
-                if (x < count)
+                if (item.Caracter == "''")
                 {
-                    simbolo.Remove(simbolo[i]);
-                    x++;
+                    f = true;
                 }
             }
+            if (count == 1 && f == true)
+            {
+                count = 0;
+            }
+            else
+            {
+                //se eliminan los ultimos valores de la lista simbolos dependiendo del numero de arriba
+                simbolo.Reverse();//le doy vuelta a la lista simbolos
+                int x = 0;
 
-            simbolo.Reverse();//la regreso a la normalidad
+                while (x < count)
+                {
+                    simbolo.Remove(simbolo[0]);
+                    x++;
+                }
+
+                simbolo.Reverse();//la regreso a la normalidad
+            }
+            
             //Se agrega el simbolo no terminal a la lista de simbolos
             Type t = new Type();
             t.cadena = produccion.Padre;
