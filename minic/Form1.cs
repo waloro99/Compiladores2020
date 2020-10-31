@@ -6,8 +6,8 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using minic.Class.Fase_2;
 
 namespace minic
 {
@@ -72,10 +72,13 @@ namespace minic
         //buton Aceptar
         private void button2_Click(object sender, EventArgs e)
         {
+
+            var analizador = new LR1();
+
             //-------------------------------- PHASE 01
             Lexical_Analysis(); //begin
             //-------------------------------- LAB 01
-            ASD_Recursive();
+            //ASD_Recursive();
         }
 
         //---------------------------------------FUNCTIONS PUBLIC---------------------------------------

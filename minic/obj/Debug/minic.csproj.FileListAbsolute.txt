@@ -22,3 +22,17 @@ C:\Users\walte\OneDrive\Documentos\papucho\2020\8vo Ciclo\Compiladores\Proyecto\
 C:\Users\walte\OneDrive\Documentos\papucho\2020\8vo Ciclo\Compiladores\Proyecto\Proyecto Compiladores\Compiladores2020\minic\bin\Debug\minic.application
 C:\Users\walte\OneDrive\Documentos\papucho\2020\8vo Ciclo\Compiladores\Proyecto\Proyecto Compiladores\Compiladores2020\minic\obj\Debug\minic.exe.manifest
 C:\Users\walte\OneDrive\Documentos\papucho\2020\8vo Ciclo\Compiladores\Proyecto\Proyecto Compiladores\Compiladores2020\minic\obj\Debug\minic.application
+D:\ricar\Documentos\Proyectos\Compiladores2020\minic\obj\Debug\minic.Form1.resources
+D:\ricar\Documentos\Proyectos\Compiladores2020\minic\obj\Debug\minic.Properties.Resources.resources
+D:\ricar\Documentos\Proyectos\Compiladores2020\minic\obj\Debug\minic.csproj.GenerateResource.cache
+D:\ricar\Documentos\Proyectos\Compiladores2020\minic\bin\Debug\minic.exe.config
+D:\ricar\Documentos\Proyectos\Compiladores2020\minic\bin\Debug\minic.exe.manifest
+D:\ricar\Documentos\Proyectos\Compiladores2020\minic\bin\Debug\minic.application
+D:\ricar\Documentos\Proyectos\Compiladores2020\minic\bin\Debug\minic.exe
+D:\ricar\Documentos\Proyectos\Compiladores2020\minic\bin\Debug\minic.pdb
+D:\ricar\Documentos\Proyectos\Compiladores2020\minic\obj\Debug\minic.csproj.CoreCompileInputs.cache
+D:\ricar\Documentos\Proyectos\Compiladores2020\minic\obj\Debug\minic.exe.manifest
+D:\ricar\Documentos\Proyectos\Compiladores2020\minic\obj\Debug\minic.application
+D:\ricar\Documentos\Proyectos\Compiladores2020\minic\obj\Debug\minic.exe
+D:\ricar\Documentos\Proyectos\Compiladores2020\minic\obj\Debug\minic.pdb
+D:\ricar\Documentos\Proyectos\Compiladores2020\minic\obj\Debug\minic.csprojAssemblyReference.cache
