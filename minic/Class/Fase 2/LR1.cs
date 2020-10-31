@@ -164,7 +164,7 @@ namespace minic.Class.Fase_2
                 }
             }
 
-            firstLineContent.RemoveAt(0);
+            lines.RemoveAt(0);
 
             for (int i = 0; i < AnalysisTable.Count; i++)
             {
