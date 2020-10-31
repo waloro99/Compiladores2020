@@ -220,7 +220,7 @@ namespace minic.Class.Fase_2
                     break;
 
                 default:
-                    itemtoSearch = itemtoSearch.Replace("T_", "");
+                    itemtoSearch = type.description.Replace("T_", "");
                     break;
             }
 
