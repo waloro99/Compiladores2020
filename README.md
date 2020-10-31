@@ -72,3 +72,13 @@ Program → Decl+
 - Para el rediseño de la gramática se realizaron varios cambios debido a que traia expresiones con *,+ y <>.
 - Se cambiaron tambien debido a que existia recursividad, factorizacion y ambiguedad que se podian eliminar.
 - Finalmente se agregaron las nuevas producciones que no contienen ningun tipo de problema que podria cambiar la gramática para el analizador.
+
+# Fasw 2 :white_check_mark:
+
+- En la fase 2 se realizo el analisis sintactico por medio del metodo LR(1), el cual se integro por medio de una gramatica dada anteriormente y que se puede revisar
+en el repositorio como Fase2.pdf
+
+- El manejo de errores se determino y controlo por medio de la tabla de analisis en el cual dependiendo el simbolo que se esperaba indicaba si era un error o no y solamente se le designaba un valor correspondiente aunque el usuario no lo hubiera colocado para seguir con el analisis del demas archivo.
+
+
+
