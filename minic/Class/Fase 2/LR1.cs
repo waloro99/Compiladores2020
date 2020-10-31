@@ -203,5 +203,36 @@ namespace minic.Class.Fase_2
 
             return true;
         }
+
+        public string GetAction(int state, Type type)
+        {
+            var itemtoSearch = "";
+            var action = "-1";
+
+            switch (type.description)
+            {
+                case "T_Identifier":
+                    itemtoSearch = "ident";
+                    break;
+
+                case "T_Operator":
+                    itemtoSearch = type.cadena;
+                    break;
+
+                default:
+                    itemtoSearch = itemtoSearch.Replace("T_", "");
+                    break;
+            }
+
+            foreach (var row in AnalysisTable)
+            {
+                if (row.Match.Equals(itemtoSearch))
+                {
+                    return row.Actions[state - 1];
+                }   
+            }
+
+            return action;
+        }
     }
 }
