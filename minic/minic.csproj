@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class\ASDRecursivo.cs" />
+    <Compile Include="Class\Fase 2\Case.cs" />
     <Compile Include="Class\Fase 2\LR1.cs" />
     <Compile Include="Class\Fase 2\Element.cs" />
     <Compile Include="Class\Fase 2\Production.cs" />
