@@ -218,9 +218,15 @@ namespace minic.Class.Fase_2
                 case "T_Operator":
                     itemtoSearch = type.cadena;
                     break;
+
                 case "$":
                     itemtoSearch = type.cadena;
                     break;
+
+                case "T_interface":
+                    itemtoSearch = "InterfaceDecl";
+                    break;
+
                 default:
                     if (type.description.Contains("T_"))
                     {

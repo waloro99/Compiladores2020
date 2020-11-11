@@ -101,7 +101,7 @@ namespace minic.Class.Fase_2
 
                 else if (f_irA == true)
                 {
-                    pila.Push(Convert.ToInt16(datos[1])); //guardo el estado
+                    pila.Push(Convert.ToInt16(datos[1])); //guardo el estado 
                     f_irA = false;
                 }
 

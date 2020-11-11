@@ -96,15 +96,7 @@ namespace minic.Class
                         }
                         else
                         {
-                            //if (word[i].Length > 30)
-                            //{
-                                Second_Filter(word[i], line);
-                            //}
-                            //else
-                            //{
-                            //    //is a identifier
-                            //    Insert_Word(word[i], line, "T_Identifier");
-                            //}
+                            Second_Filter(word[i], line);
                         }
                     }
                 }
@@ -399,7 +391,7 @@ namespace minic.Class
             {
                 foreach (var item in copy.Split(' '))
                 {
-                    if (item != "")
+                    if (item != "" && !(item.Contains("\t")))
                     {
                         Type newType = new Type();
                         newType.cadena = item;
