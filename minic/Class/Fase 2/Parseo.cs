@@ -266,7 +266,7 @@ namespace minic.Class.Fase_2
                 res[0] = "error";
                 res[1] = 0.ToString();
             }
-            else if (c == 'd')
+            else if (c == 'd' || c == 's')
             {
                 res[0] = "desplazar";
                 acc = acc.Remove(0, 1);
