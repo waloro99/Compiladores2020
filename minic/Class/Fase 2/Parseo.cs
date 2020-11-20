@@ -14,8 +14,10 @@ namespace minic.Class.Fase_2
         public Stack<string> accion = new Stack<string>(); //se va guardando las acciones que va realizando los parseos
         public string errores; //guarda los valores encontrados
         public Queue<Type> entrada =  new Queue<Type>();
+        public List<string> listOpciones = new List<string>(); //opciones por si hay conflictos en los estados de la tabla de LR1
+        public Queue<string> OpcionesCola = new Queue<string>();//para mover dentro de las estructuras
         //banderas para controlar el flujo
-        bool f_inicio = true, f_desplazar = false, f_reducir = false, f_irA = false, f_aceptar = false, f_error = false;
+        bool f_inicio = true, f_desplazar = false, f_reducir = false, f_irA = false, f_aceptar = false, f_error = false,f_opc = false;
 
         //--------------------------------------------- PUBLIC FUNCTIONS -----------------------------------------------------
 
@@ -52,7 +54,7 @@ namespace minic.Class.Fase_2
                 string acc = ""; //accion guarda el dato enviado por el metodo
                 string[] datos = new string[2]; //movimiento, estado
 
-                if (f_inicio == true)
+                if (f_inicio == true && f_error == false)
                 {
                     p = pila.Peek(); //obtenemos el top de la pila
                     acc = MetodoFalso(p, entrada.Peek());
@@ -61,7 +63,7 @@ namespace minic.Class.Fase_2
                     accion.Push(datos[0]); //guardo la accion
                     FlagAccion(datos[0]); //activo la accion
                 }
-                else if (f_reducir == true)
+                else if (f_reducir == true && f_error == false)
                 {
                     //se sabe que cuando hay una reduccion se continua un ir_A
                     f_reducir = false;
@@ -72,7 +74,7 @@ namespace minic.Class.Fase_2
                     accion.Push(datos[0]); //guardo la accion
                     FlagAccion(datos[0]); //activo la accion en este caso deberia de enviar IR_A
                 }
-                else
+                else if(f_error == false)
                 {
                     //depende de lo que pase despues durante el programa 
                     p = pila.Peek(); //obtenemos el top de la pila
@@ -83,14 +85,14 @@ namespace minic.Class.Fase_2
                 }
 
                 //Se decide que hacer dependiendo de la bandera activada
-                if (f_desplazar == true)
+                if (f_desplazar == true && f_error == false)
                 {
                     pila.Push(Convert.ToInt16(datos[1])); //guardo el estado
                     simbolo.Add(entrada.Dequeue());//pasar el dato de entrada a simbolo
                     f_desplazar = false; //quito bandera
                 }
 
-                else if (f_reducir == true)
+                else if (f_reducir == true && f_error == false)
                 {
                     int r = Reducir(Convert.ToInt16(datos[1])); // cambiamos la lista simbolo y nos devuelve cuantos pop hacer
                     for (int i = 0; i < r; i++)
@@ -99,24 +101,36 @@ namespace minic.Class.Fase_2
                     }
                 }
 
-                else if (f_irA == true)
+                else if (f_irA == true && f_error == false)
                 {
                     pila.Push(Convert.ToInt16(datos[1])); //guardo el estado 
                     f_irA = false;
                 }
 
-                else if (f_aceptar == true)
+                else if (f_aceptar == true && f_error == false)
                 {
                     //Significa que termino todo bien solo hay que verificar despues del while que no exista otra cadena
                     entrada.Dequeue(); //salida de $
                 }
 
-                else if (f_error == true)
+                else if (f_error == true && f_opc == false)
                 {
                     Type n_error = new Type();
                     n_error = entrada.Peek();
                     error = "Linea: "+ n_error.linea +" Columna: "+ n_error.column_I +" - "+ n_error.column_F + " Simbolo: "+ n_error.cadena +"    Error: No se esperaba este simbolo.";
                     entrada.Clear();
+                }
+                else if (f_opc == true)
+                {
+                    if (OpcionesCola.Count != 0)
+                    {
+                        //agregar metodo nuevo
+                    }
+                    else
+                    {
+                        f_opc = false;
+                        f_error = true;
+                    }
                 }
 
             }
@@ -156,7 +170,7 @@ namespace minic.Class.Fase_2
         private string MetodoFalso(int pila, Type entrada) 
         {
             LR1 lr1 = new LR1();
-            string res = lr1.GetAction(pila, entrada);
+            string res = lr1.GetAction(pila, entrada,ref listOpciones);
             if (res != "-1")
             {
                 return res;
@@ -277,6 +291,15 @@ namespace minic.Class.Fase_2
                 res[0] = "reducir";
                 acc = acc.Remove(0, 1);
                 res[1] = acc;
+            }
+            else if (acc == "-2")
+            {
+                foreach (var item in listOpciones)
+                {
+                    OpcionesCola.Enqueue(item);
+                }
+                f_opc = true;//para activar el nuevo metodo
+                res =  SplitAction(OpcionesCola.Dequeue());//recursividad
             }
             else 
             {

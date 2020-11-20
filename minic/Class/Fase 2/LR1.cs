@@ -247,6 +247,7 @@ namespace minic.Class.Fase_2
 
                     if (result.Contains("/"))
                     {
+                        listaOpciones.Clear(); //por si se quedo un dato metido anteriormente
                         listaOpciones = result.Split('/').ToList();
                     }
 
