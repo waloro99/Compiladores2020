@@ -204,7 +204,7 @@ namespace minic.Class.Fase_2
             return true;
         }
 
-        public string GetAction(int state, Type type)
+        public string GetAction(int state, Type type, ref List<string> listaOpciones)
         {
             var itemtoSearch = "";
             var action = "-1";
@@ -223,9 +223,9 @@ namespace minic.Class.Fase_2
                     itemtoSearch = type.cadena;
                     break;
 
-                case "T_interface":
-                    itemtoSearch = "InterfaceDecl";
-                    break;
+                //case "T_interface":
+                //    itemtoSearch = "InterfaceDecl";
+                //    break;
 
                 default:
                     if (type.description.Contains("T_"))
@@ -243,11 +243,18 @@ namespace minic.Class.Fase_2
             {
                 if (row.Match.Equals(itemtoSearch))
                 {
-                    return row.Actions[state];
+                    var result = row.Actions[state];
+
+                    if (result.Contains("/"))
+                    {
+                        listaOpciones = result.Split('/').ToList();
+                    }
+
+                    return "-2";
                 }   
             }
 
-            return action;
+            return action; //d39
         }
 
         public Production GetState(int index)
