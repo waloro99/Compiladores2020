@@ -276,7 +276,7 @@ namespace minic.Class.Fase_2
         {
             string[] res = new string[2];
             char c = acc[0];
-            if (acc == "aceptar")
+            if (acc == "acc")
             {
                 res[0] = "aceptar";
                 res[1] = 0.ToString();
@@ -310,7 +310,7 @@ namespace minic.Class.Fase_2
             else 
             {
                 res[0] = "irA";
-                res[1] = acc;
+                res[1] = acc;            
             }
 
             return res;

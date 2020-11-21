@@ -28,8 +28,22 @@ namespace minic.Class.Fase_3
         //Flujo que llevara para la lectura de datos
         private string Flujo(List<Type> tokens) 
         {
-            return null;
+            return "";
         }
+
+        //Metodo
+        private void MatchRule(Type dato) 
+        {
+            switch (dato.description)
+            {
+                case "":
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
 
         #endregion
     }
