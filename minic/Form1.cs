@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using minic.Class.Fase_2;
+using minic.Class.Fase_3;
 
 namespace minic
 {
@@ -81,6 +82,8 @@ namespace minic
             //ASD_Recursive();
             //-------------------------------- PHASE 2
             AS_LR1();
+            //-------------------------------- PHASE 3
+            Semantic_Analysis();
         }
 
         //---------------------------------------FUNCTIONS PUBLIC---------------------------------------
@@ -177,6 +180,24 @@ namespace minic
             else
             {
                 MessageBox.Show("Correct Sintaxis", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        //Method to do Semantic Analysis --> PHASE 3
+        private void Semantic_Analysis()
+        {
+            Semantico s = new Semantico();
+            string Msg_Error = s.Tabla_Simbolos(FileScanner);
+
+            //Show Error Syntactic
+
+            if (Msg_Error != "")
+            {
+                MessageBox.Show(Msg_Error, "Error Semantico:", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                MessageBox.Show("Correct Semantic", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
