@@ -25,6 +25,7 @@ namespace minic.Class.Fase_3
 
         #region private functions
 
+        //Flujo que llevara para la lectura de datos
         private string Flujo(List<Type> tokens) 
         {
             return null;
