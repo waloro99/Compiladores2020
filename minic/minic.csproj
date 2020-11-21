@@ -80,6 +80,8 @@
     <Compile Include="Class\Fase 2\Element.cs" />
     <Compile Include="Class\Fase 2\Parseo.cs" />
     <Compile Include="Class\Fase 2\Production.cs" />
+    <Compile Include="Class\Fase 3\Arbol.cs" />
+    <Compile Include="Class\Fase 3\Nodo.cs" />
     <Compile Include="Class\Fase 3\Semantico.cs" />
     <Compile Include="Class\Fase 3\TablaS.cs" />
     <Compile Include="Class\ReadFileC.cs" />

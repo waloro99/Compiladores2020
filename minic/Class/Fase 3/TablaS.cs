@@ -16,5 +16,9 @@ namespace minic.Class.Fase_3
 
         public string error { get; set; } //Si hay error
 
+        public TablaS(Type tk)
+        {
+            token = tk;
+        }
     }
 }
