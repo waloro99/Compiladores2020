@@ -249,9 +249,11 @@ namespace minic.Class.Fase_2
                     {
                         listaOpciones.Clear(); //por si se quedo un dato metido anteriormente
                         listaOpciones = result.Split('/').ToList();
+                        return "-2";
                     }
 
-                    return "-2";
+                    return result;
+                   
                 }   
             }
 

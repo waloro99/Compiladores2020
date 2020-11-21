@@ -74,6 +74,12 @@ namespace minic.Class.Fase_2
                     accion.Push(datos[0]); //guardo la accion
                     FlagAccion(datos[0]); //activo la accion en este caso deberia de enviar IR_A
                 }
+                else if (f_opc == true && f_error == false)
+                {
+                    datos = SplitAction(OpcionesCola.Dequeue());//obtiene accion y estado
+                    accion.Push(datos[0]); //guardo la accion
+                    FlagAccion(datos[0]); //activo la accion en este caso deberia de enviar IR_A
+                }
                 else if(f_error == false)
                 {
                     //depende de lo que pase despues durante el programa 
