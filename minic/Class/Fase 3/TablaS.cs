@@ -20,5 +20,10 @@ namespace minic.Class.Fase_3
         {
             token = tk;
         }
+
+        public override string ToString()
+        {
+            return $"{token.description}\t\tline {token.linea} cols {token.column_I}-{token.column_F} type {type} val {val}\n";
+        }
     }
 }

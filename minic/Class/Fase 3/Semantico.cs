@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace minic.Class.Fase_3
 {
@@ -11,12 +12,13 @@ namespace minic.Class.Fase_3
         //--------------------------------------------- PUBLIC FUNCTIONS -----------------------------------------------------
 
         #region public functions
+        Arbol x = new Arbol();
 
         //metodo publico para hacer el parseo
-        public string Tabla_Simbolos(List<Type> tokens)
+        public string Tabla_Simbolos(List<Type> tokens, string path)
         {
             string error = "";
-            error = Flujo(tokens);
+            error = Flujo(tokens, path);
             return error;
         }
         #endregion
@@ -26,15 +28,36 @@ namespace minic.Class.Fase_3
         #region private functions
 
         //Flujo que llevara para la lectura de datos
-        private string Flujo(List<Type> tokens) 
+        private string Flujo(List<Type> tokens, string path) 
         {
-            return "";
+            string error = "";
+
+            if (x.Raiz != null)
+            {
+                foreach (var item in x.Raiz.Lista_Nodos)
+                {
+                    MatchRule(item);
+                }
+
+                foreach (var item in tokens)
+                {
+                    x.Recorrido(x.Raiz, item);
+                }
+            }
+            
+
+            EscribirTabla(tokens, path);
+
+            return error;
         }
 
+        //Metodo para mostrar la tabla de simbolos
+
+
         //Metodo
-        private void MatchRule(Type dato) 
+        private void MatchRule(TablaS dato) 
         {
-            switch (dato.description)
+            switch (dato.token.description)
             {
                 case "Constant":
                     Match_Constant();
@@ -154,20 +177,89 @@ namespace minic.Class.Fase_3
 
         private void Match_Constant() 
         {
-        
+            string opc = "";
+            switch (opc)
+            {
+                case "intConstant":
+                    break;
+                case "doubleConstant":
+                    break;
+                case "boolConstant":
+                    break;
+                case "stringConstant":
+                    break;
+                case "null":
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void Match_LValue()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case "ident":
+                    break;
+                case "Expr":
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_Expr()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case "Constant":
+                    break;
+                case "LValue":
+                    break;
+                case "this":
+                    break;
+                case "(":
+                    break;
+                case "+":
+                    break;
+                case "*":
+                    break;
+                case "%":
+                    break;
+                case "-":
+                    break;
+                case "<":
+                    break;
+                case ">":
+                    break;
+                case "<=":
+                    break;
+                case ">=":
+                    break;
+                case "==":
+                    break;
+                case "&&":
+                    break;
+                case "!":
+                    break;
+                case "New":
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void Match_Expr2()
         {
+            string opc = "";
+            switch (opc)
+            {
+                case ",":
+                    break;
+                default:
+                    break;
+            }
 
         }
         private void Match_PrintStmt()
@@ -186,7 +278,14 @@ namespace minic.Class.Fase_3
         }
         private void Match_IfStmt2()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case ",":
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_IfStmt()
         {
@@ -194,31 +293,96 @@ namespace minic.Class.Fase_3
         }
         private void Match_Expr1()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case "Expr":
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_Actuals()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case ",":
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_CallStmt()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case "ident":
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_Stmt()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case "CallStmt":
+                    break;
+                case "StmtBlock":
+                    break;
+                case "PrintStmt":
+                    break;
+                case "ReturnStmt":
+                    break;
+                case "BreakStmt":
+                    break;
+                case "ForStmt":
+                    break;
+                case "WhileStmt":
+                    break;
+                case "IfStmt":
+                    break;
+                case "Expr1":
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_Stmt2()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case "Stmt":
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_ConstDecl2()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case "ConstDecl":
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_VariableDecl2()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case "VariableDecl":
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_StmtBlock()
         {
@@ -226,11 +390,25 @@ namespace minic.Class.Fase_3
         }
         private void Match_Prototype()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case "void":
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_Prototype2()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case "Prototype":
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_InterfaceDecl()
         {
@@ -238,19 +416,54 @@ namespace minic.Class.Fase_3
         }
         private void Match_Field()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case "ConstDecl":
+                    break;
+                case "FuncionDecl":
+                    break;
+                case "VariableDecl":
+                    break;
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_Field2()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case "Field":
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_ClassDecl3()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case "ident":
+                    break;
+                case ",":
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_ClassDecl2()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case ":":
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_ClassDecl()
         {
@@ -258,19 +471,63 @@ namespace minic.Class.Fase_3
         }
         private void Match_Formals()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case ",":
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_FunctionDecl()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case "void":
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_Type()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case "int":
+                    break;
+                case "double":
+                    break;
+                case "bool":
+                    break;
+                case "string":
+                    break;
+                case "ident":
+                    break;
+                case "Type":
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_ConstType()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case "int":
+                    break;
+                case "double":
+                    break;
+                case "bool":
+                    break;
+                case "string":
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_ConstDecl()
         {
@@ -286,11 +543,34 @@ namespace minic.Class.Fase_3
         }
         private void Match_Decl()
         {
+            string opc = "";
+            switch (opc)
+            {
+                case "InterfaceDecl":
+                    break;
+                case "ClassDecl":
+                    break;
+                case "ConstDecl":
+                    break;
+                case "FunctionDecl":
+                    break;
+                case "VariableDecl":
+                    break;
+                default:
+                    break;
+            }
 
         }
         private void Match_Decl2()
         {
-
+            string opc = "";
+            switch (opc)
+            {
+                case "Decl":
+                    break;
+                default:
+                    break;
+            }
         }
         private void Match_Program()
         {
@@ -302,6 +582,51 @@ namespace minic.Class.Fase_3
         }
 
         #endregion
+
+
+        private void EscribirTabla(List<Type> tokens, string path)
+        {
+            List < TablaS > tabla = new List<TablaS>();
+
+            foreach (var item in tokens)
+            {
+                TablaS n = new TablaS(item);
+                n.type = "int";
+                if (n.token.description == "T_identifier" || n.token.description == "T_int" || n.token.description == "T_double" || n.token.description == "T_String")
+                {
+                    tabla.Add(n);
+                }
+                
+            }
+
+            string NewPath = NewPath_File(path);
+            NewPath = NewPath + "tabla";
+            TextWriter write = new StreamWriter(NewPath);
+            foreach (var item in tabla)
+            {
+                write.WriteLine(item.ToString());//override
+            }
+            write.Close(); //close the file
+
+
+        }
+
+        private string NewPath_File(string path)
+        {
+            char[] path_A = path.ToArray();
+            string new_Path = string.Empty;
+            bool flag_point = false;
+            for (int i = path_A.Length - 1; i > -1; i--)
+            {
+                if (path_A[i] == '.' && flag_point == false)
+                    flag_point = true;
+                if (flag_point == true)
+                    new_Path = new_Path + path_A[i];
+            }
+            char[] revers = new_Path.ToCharArray(); //hola --> aloh
+            Array.Reverse(revers);
+            return new string(revers);
+        }
 
         #endregion
     }

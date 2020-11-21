@@ -187,7 +187,7 @@ namespace minic
         private void Semantic_Analysis()
         {
             Semantico s = new Semantico();
-            string Msg_Error = s.Tabla_Simbolos(FileScanner);
+            string Msg_Error = s.Tabla_Simbolos(FileScanner, PathFile);
 
             //Show Error Syntactic
 

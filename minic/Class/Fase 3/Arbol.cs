@@ -26,8 +26,29 @@ namespace minic.Class.Fase_3
             }
             else
             {
+                var tablaS = new TablaS(token);
 
+                Nodo nuevoNodo = new Nodo();
+                nuevoNodo.Lista_Nodos.Add(tablaS);
             }
         }
+
+
+        public void Recorrido(Nodo n, Type x)
+        {
+            if (n != null)
+            {
+                foreach (var item in n.Lista_Nodos)
+                {
+                    if (item.token.description == x.description)
+                    {
+                        item.val = x.description;
+                    }
+                }
+            }
+           
+        }
+
+
     }
 }
