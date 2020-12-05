@@ -36,3 +36,17 @@ D:\ricar\Documentos\Proyectos\Compiladores2020\minic\obj\Debug\minic.application
 D:\ricar\Documentos\Proyectos\Compiladores2020\minic\obj\Debug\minic.exe
 D:\ricar\Documentos\Proyectos\Compiladores2020\minic\obj\Debug\minic.pdb
 D:\ricar\Documentos\Proyectos\Compiladores2020\minic\obj\Debug\minic.csprojAssemblyReference.cache
+C:\Users\ricar\Desktop\Compiladores2020\minic\bin\Debug\minic.exe.config
+C:\Users\ricar\Desktop\Compiladores2020\minic\bin\Debug\minic.exe.manifest
+C:\Users\ricar\Desktop\Compiladores2020\minic\bin\Debug\minic.application
+C:\Users\ricar\Desktop\Compiladores2020\minic\bin\Debug\minic.exe
+C:\Users\ricar\Desktop\Compiladores2020\minic\bin\Debug\minic.pdb
+C:\Users\ricar\Desktop\Compiladores2020\minic\obj\Debug\minic.csprojAssemblyReference.cache
+C:\Users\ricar\Desktop\Compiladores2020\minic\obj\Debug\minic.Form1.resources
+C:\Users\ricar\Desktop\Compiladores2020\minic\obj\Debug\minic.Properties.Resources.resources
+C:\Users\ricar\Desktop\Compiladores2020\minic\obj\Debug\minic.csproj.GenerateResource.cache
+C:\Users\ricar\Desktop\Compiladores2020\minic\obj\Debug\minic.csproj.CoreCompileInputs.cache
+C:\Users\ricar\Desktop\Compiladores2020\minic\obj\Debug\minic.exe.manifest
+C:\Users\ricar\Desktop\Compiladores2020\minic\obj\Debug\minic.application
+C:\Users\ricar\Desktop\Compiladores2020\minic\obj\Debug\minic.exe
+C:\Users\ricar\Desktop\Compiladores2020\minic\obj\Debug\minic.pdb

@@ -93,14 +93,14 @@ namespace minic.Class.Fase_2
                 //Se decide que hacer dependiendo de la bandera activada
                 if (f_desplazar == true && f_error == false)
                 {
-                    pila.Push(Convert.ToInt16(datos[1])); //guardo el estado
+                    pila.Push(Convert.ToInt32(datos[1])); //guardo el estado
                     simbolo.Add(entrada.Dequeue());//pasar el dato de entrada a simbolo
                     f_desplazar = false; //quito bandera
                 }
 
                 else if (f_reducir == true && f_error == false)
                 {
-                    int r = Reducir(Convert.ToInt16(datos[1])); // cambiamos la lista simbolo y nos devuelve cuantos pop hacer
+                    int r = Reducir(Convert.ToInt32(datos[1])); // cambiamos la lista simbolo y nos devuelve cuantos pop hacer
                     for (int i = 0; i < r; i++)
                     {
                         pila.Pop(); //hace los pop necesarios para la reduccion 
@@ -109,7 +109,7 @@ namespace minic.Class.Fase_2
 
                 else if (f_irA == true && f_error == false)
                 {
-                    pila.Push(Convert.ToInt16(datos[1])); //guardo el estado 
+                    pila.Push(Convert.ToInt32(datos[1])); //guardo el estado 
                     f_irA = false;
                 }
 

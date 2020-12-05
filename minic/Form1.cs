@@ -197,12 +197,9 @@ namespace minic
             }
             else
             {
-                MessageBox.Show("Correct Semantic", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Semántica correcta", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
-
         #endregion
-
-
     }
 }
