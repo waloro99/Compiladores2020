@@ -166,6 +166,9 @@ namespace minic.Class
             var listReserved = Regex.Matches(copy, @"(" + reserved + ")"); //find Reserved words
             RemoveRecurrence(ref copy, listReserved);
 
+            var listOnlyWords = Regex.Matches(copy, @"([a-zA-Z]+)((\d|_)*([a-zA-Z]*))*"); //Only identifiers
+            RemoveRecurrence(ref copy, listOnlyWords);
+
             var listHexaDecimals = Regex.Matches(copy, @"(0x|0X)[0-9]*[a-fA-F]*");
             RemoveRecurrence(ref copy, listHexaDecimals);
 
@@ -181,9 +184,6 @@ namespace minic.Class
 
             var listBoolean = Regex.Matches(copy, @"(true|false)"); //find boolean values.
             RemoveRecurrence(ref copy, listBoolean);
-
-            var listOnlyWords = Regex.Matches(copy, @"([a-zA-Z]+)((\d|_)*([a-zA-Z]*))*"); //Only identifiers
-            RemoveRecurrence(ref copy, listOnlyWords);
 
             var listDecimals = Regex.Matches(copy, @"[0-9]+");
             RemoveRecurrence(ref copy, listDecimals);
@@ -391,7 +391,7 @@ namespace minic.Class
             {
                 foreach (var item in copy.Split(' '))
                 {
-                    if (item != "" && !(item.Contains("\t")))
+                    if (item != "" && !(item.Contains("\t")) && (item != "numbe"))
                     {
                         Type newType = new Type();
                         newType.cadena = item;
