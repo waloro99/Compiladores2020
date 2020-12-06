@@ -9,9 +9,9 @@ namespace minic.Class.Fase_2
 {
     public class LR1
     {
-        public List<Production> Grammar { get; set; }
-        public List<Production> CanonicalCollection { get; set; }
-        public List<Case> AnalysisTable{ get; set; }
+        private List<Production> Grammar { get; set; }
+        private List<Production> CanonicalCollection { get; set; }
+        private List<Case> AnalysisTable{ get; set; }
 
         private string PathConfig { get; set; }
 
@@ -139,8 +139,6 @@ namespace minic.Class.Fase_2
                     }
                 }
             }
-
-
             return found;
         }
 
@@ -223,10 +221,6 @@ namespace minic.Class.Fase_2
                     itemtoSearch = type.cadena;
                     break;
 
-                //case "T_interface":
-                //    itemtoSearch = "InterfaceDecl";
-                //    break;
-
                 default:
                     if (type.description.Contains("T_"))
                     {
@@ -247,9 +241,11 @@ namespace minic.Class.Fase_2
 
                     if (result.Contains("/"))
                     {
-                        listaOpciones.Clear(); //por si se quedo un dato metido anteriormente
-                        listaOpciones = result.Split('/').ToList();
-                        return "-2";
+                        //listaOpciones.Clear(); //por si se quedo un dato metido anteriormente
+                        //listaOpciones = result.Split('/').ToList();
+                        //return "-2";
+
+                        return result.Split('/')[0];
                     }
 
                     return result;

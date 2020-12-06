@@ -57,7 +57,7 @@ namespace minic.Class.Fase_2
                 if (f_inicio == true && f_error == false)
                 {
                     p = pila.Peek(); //obtenemos el top de la pila
-                    acc = MetodoFalso(p, entrada.Peek());
+                    acc = ObtenerAccion(p, entrada.Peek());
                     datos = SplitAction(acc);//obtiene accion y estado
                     f_inicio = false;//se termino la primera lectura
                     accion.Push(datos[0]); //guardo la accion
@@ -69,7 +69,7 @@ namespace minic.Class.Fase_2
                     f_reducir = false;
                     p = pila.Peek(); //obtenemos el top de la pila
                     Token a = Ir_A();
-                    acc = MetodoFalso(p, a); //obtenemos el ultimo valor de Simbolo
+                    acc = ObtenerAccion(p, a); //obtenemos el ultimo valor de Simbolo
                     datos = SplitAction(acc);//obtiene accion y estado
                     accion.Push(datos[0]); //guardo la accion
                     FlagAccion(datos[0]); //activo la accion en este caso deberia de enviar IR_A
@@ -84,7 +84,7 @@ namespace minic.Class.Fase_2
                 {
                     //depende de lo que pase despues durante el programa 
                     p = pila.Peek(); //obtenemos el top de la pila
-                    acc = MetodoFalso(p, entrada.Peek());
+                    acc = ObtenerAccion(p, entrada.Peek());
                     datos = SplitAction(acc);//obtiene accion y estado
                     accion.Push(datos[0]); //guardo la accion
                     FlagAccion(datos[0]); //activo la accion
@@ -173,7 +173,7 @@ namespace minic.Class.Fase_2
         }
 
         //metodo que devuelve los datos que se realizaran para el parseo -- aqui debe de decirnos si hay error
-        private string MetodoFalso(int pila, Token entrada) 
+        private string ObtenerAccion(int pila, Token entrada) 
         {
             LR1 lr1 = new LR1();
             string res = lr1.GetAction(pila, entrada,ref listOpciones);
