@@ -9,17 +9,14 @@ namespace minic.Class
 {
     public class Scanner
     {
-
         //---------------------------------------PUBLIC FUNCTIONS---------------------------------------
-
         #region FUNCTIONS PUBLIC
-
         //List for save data the lexic analysis
-        public List<Token> NewFile = new List<Token>();
-        Operadores_fase1 t = new Operadores_fase1(); //call the tokens
-        public int column = 1;
-        public int row = 0;
-        public bool flag_comment = false; //if there is an open comment --> true
+        private List<Token> NewFile = new List<Token>();
+        private Operadores_fase1 t = new Operadores_fase1(); //call the tokens
+        private int column = 1;
+        private int row = 0;
+        private bool flag_comment = false; //if there is an open comment --> true
 
         //Patterns
         private string onlyLetters = @"^[a-zA-Z]+$";
@@ -38,11 +35,8 @@ namespace minic.Class
             Scanner_Private(file);
             return NewFile; // return the new file for write 
         }
-
-
         #endregion
         //---------------------------------------PRIVATE FUNCTIONS---------------------------------------
-
         #region PRIVATE FUNCTIONS
 
         //method for analysis the file
@@ -51,14 +45,15 @@ namespace minic.Class
             //scroll the file
             for (int i = 0; i < file.Length; i++) // i = fila
             {
-                //separate the lines
-                //separate the words
-                string[] word = Regex.Split(file[i], " ");
-                row++; //the line increment 
+                //separate the lines, separate the words
+                var word = Regex.Split(file[i], " ");
+                row++;
+
                 if (flag_comment == false)
                 {
                     //check if it is not comment or string
-                    string type_line = Is_Line(file[i]);
+                    var type_line = Is_Line(file[i]);
+
                     if (type_line != "")
                         Scanner_Line(file[i], row, type_line); //filter the commentary and string, string the line complete
                     else
