@@ -474,12 +474,12 @@ namespace minic.Class
                 if (i < array_line.Length - 1 && array_line[i] == '/' && array_line[i + 1] == '*')
                     return "commentary2";
                 //if is a begin commentary
-                else if (i < array_line.Length - 1 && array_line[i] == '/' && array_line[i + 1] == '/')
+                if (i < array_line.Length - 1 && array_line[i] == '/' && array_line[i + 1] == '/')
                     return "commentary";
                 //if is a string
-                else if (array_line[i] == '"')
+                if (array_line[i] == '"')
                     return "string";
-                else if (i < array_line.Length - 1 && array_line[i] == '*' && array_line[i + 1] == '/')
+                if (i < array_line.Length - 1 && array_line[i] == '*' && array_line[i + 1] == '/')
                     return "Error commentary";
             }
 
@@ -506,14 +506,14 @@ namespace minic.Class
                     flag_bs = true;
                     now_String = now_String + word_A[i];
                 }
-                else if (word_A[i] != '"' && flag_bs == true && flag_as == false)
+                else if (word_A[i] != '"' && flag_bs && flag_as == false)
                     now_String = now_String + word_A[i];
-                else if (word_A[i] == '"' && flag_bs == true && flag_as == false)
+                else if (word_A[i] == '"' && flag_bs && flag_as == false)
                 {
                     now_String = now_String + word_A[i];
                     flag_as = true;
                 }
-                else if (flag_as == true)
+                else if (flag_as)
                     after_String = after_String + word_A[i];
             }
 
@@ -697,7 +697,7 @@ namespace minic.Class
                     flag_after = true;
                     i++; //quit character '/'
                 }
-                else if (flag_before == true && flag_after == true)
+                else if (flag_before && flag_after)
                     after_Comment2 = after_Comment2 + Word_A2[i];
             }
             //check commentary before
@@ -707,7 +707,7 @@ namespace minic.Class
                 Filter_First(b_word, line);
             }
             //check flag
-            if (flag_after == true)
+            if (flag_after)
             {
                 if (after_Comment2 != "")
                 {
@@ -729,12 +729,12 @@ namespace minic.Class
         //method for case commentary2 in method scanner line
         private void Case_ErrorComentary(string word, int line)
         {
-            char[] word_A = word.ToArray();
-            string before = "";
-            string now = "*/";
-            string after = "";
-            bool flag = false;
-            //scroll
+            var word_A = word.ToArray(); 
+            var before = string.Empty;
+            var now = "*/";
+            var after = "";
+            var flag = false;
+
             for (int i = 0; i < word_A.Length; i++)
             {
                 if (word_A[i] == '*' && word_A[i + 1] == '/')
@@ -747,22 +747,23 @@ namespace minic.Class
                 else if (flag == true)
                     after = after + word_A[i];
             }
-            //check
+            
             if (before != "")
             {
                 //check if it is not comment or string
-                string type_line = Is_Line(before);
+                var type_line = Is_Line(before);
+
                 if (type_line != "")
                     Scanner_Line(before, row, type_line); //filter the commentary and string, string the line complete
                 else
                 {
-                    string[] b_word = Regex.Split(before, " ");//parse string separately
+                    var b_word = Regex.Split(before, " ");//parse string separately
                     Filter_First(b_word, line);
                 }
             }
             //insert error
             Insert_Error(now, line, "Error: End of comment unpaired");
-            column = column + 2;
+            column += 2;
             
             if (after != "")
             {
@@ -781,8 +782,9 @@ namespace minic.Class
         //method to know if this line is the closing of the comment
         private void Continue_Commented(string word, int line)
         {
-            char[] word_A = word.ToArray();
-            string after_commentary = string.Empty;
+            var word_A = word.ToArray();
+            var after_commentary = string.Empty;
+
             //scroll the string
             for (int i = 0; i < word_A.Length; i++)
             {
@@ -797,7 +799,8 @@ namespace minic.Class
             if (after_commentary != "")
             {
                 //check if it is not comment or string
-                string type_line = Is_Line(after_commentary);
+                var type_line = Is_Line(after_commentary);
+
                 if (type_line != "")
                     Scanner_Line(after_commentary, row, type_line); //filter the commentary and string, string the line complete
                 else
