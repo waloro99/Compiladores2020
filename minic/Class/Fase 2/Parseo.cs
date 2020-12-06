@@ -19,6 +19,7 @@ namespace minic.Class.Fase_2
         //banderas para controlar el flujo
         bool f_inicio = true, f_desplazar = false, f_reducir = false, f_irA = false, f_aceptar = false, f_error = false,f_opc = false;
 
+        LR1 lr1 = new LR1();
         //--------------------------------------------- PUBLIC FUNCTIONS -----------------------------------------------------
 
         #region public functions
@@ -175,8 +176,7 @@ namespace minic.Class.Fase_2
         //metodo que devuelve los datos que se realizaran para el parseo -- aqui debe de decirnos si hay error
         private string ObtenerAccion(int pila, Token entrada) 
         {
-            LR1 lr1 = new LR1();
-            string res = lr1.GetAction(pila, entrada,ref listOpciones);
+            var res = lr1.GetAction(pila, entrada,ref listOpciones);
             if (res != "-1")
             {
                 return res;
@@ -214,7 +214,6 @@ namespace minic.Class.Fase_2
         {
             //Obtenemos la produccion del estado que se indica con el parametro
             Production produccion = new Production();
-            LR1 lr1 = new LR1();
             produccion = lr1.GetState(p);
             //Se pregunta cuantos simbolos produce y se guarda en una variable
             int count = produccion.Lista_elementos.Count;

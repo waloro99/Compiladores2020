@@ -58,8 +58,8 @@ namespace minic
         //button buscar
         private void button1_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            //openFileDialog.Filter = "Text documents (.txt)|*.txt"; //only file .txt
+            var openFileDialog = new OpenFileDialog();
+
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 PathFile = openFileDialog.FileName;
@@ -73,9 +73,6 @@ namespace minic
         //buton Aceptar
         private void button2_Click(object sender, EventArgs e)
         {
-
-            //var analizador = new LR1();
-
             //-------------------------------- PHASE 01
             Lexical_Analysis(); //begin
             //-------------------------------- LAB 01

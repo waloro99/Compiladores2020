@@ -245,7 +245,7 @@ namespace minic.Class.Fase_2
                         //listaOpciones = result.Split('/').ToList();
                         //return "-2";
 
-                        return result.Split('/')[0];
+                        return result.Split('/')[0].TrimEnd();
                     }
 
                     return result;
