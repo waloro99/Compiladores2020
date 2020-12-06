@@ -17,7 +17,7 @@ namespace minic
         // ----------------------------------------VAR GLOBAL-------------------------------------------
 
         public string PathFile = string.Empty; // var path the file
-        public List<Class.Type> FileScanner = new List<Class.Type>(); //list token
+        public List<Class.Token> FileScanner = new List<Class.Token>(); //list token
 
         //----------------------------------------- INTERFACE -----------------------------------------
 

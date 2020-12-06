@@ -15,7 +15,7 @@ namespace minic.Class.Fase_3
             Raiz = null;
         }
 
-        public void Insert(Type token)
+        public void Insert(Token token)
         {
             if (Raiz == null)
             {
@@ -34,7 +34,7 @@ namespace minic.Class.Fase_3
         }
 
 
-        public void Recorrido(Nodo n, Type x)
+        public void Recorrido(Nodo n, Token x)
         {
             if (n != null)
             {

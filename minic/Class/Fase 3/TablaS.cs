@@ -8,7 +8,7 @@ namespace minic.Class.Fase_3
 {
     public class TablaS
     {
-        public Type token { get; set; } //datos del token
+        public Token token { get; set; } //datos del token
 
         public string val { get; set; } //atributo valor
 
@@ -16,14 +16,14 @@ namespace minic.Class.Fase_3
 
         public string error { get; set; } //Si hay error
 
-        public TablaS(Type tk)
+        public TablaS(Token tk)
         {
             token = tk;
         }
 
         public override string ToString()
         {
-            return $"{token.description}\t\tline {token.linea} cols {token.column_I}-{token.column_F} type {type} val {val}\n";
+            return $"{token.description}\t\tline {token.linea} type {type} val {val}\n";
         }
     }
 }

@@ -6,64 +6,37 @@ using System.Threading.Tasks;
 
 namespace minic.Class
 {
-    public class Token
+    public class Token : IComparable
     {
+        //class type object
+        public string cadena { get; set; } //Data
+        public int linea { get; set; } //line in the file
+        public int column_I { get; set; } //first column
+        public int column_F { get; set; } //last column
+        public string Error { get; set; } //if exist a error
+        public string description{ get; set; }
 
-        //---------------------------------------FUNCTIONS PUBLIC---------------------------------------
+        public int IndexMatch { get; set; }
 
-        #region FUNCTIONS PUBLIC
-
-        //var that operators and punctuation characters
-        public string operators = "+ - * / % < <= > >= = == != && || ! ; , . [ ] ( ) { } [] () {}";
-
-        //var that contains reserved words
-        public string sentence = "void int double bool string class const interface null this for while" +
-                                 " foreach if else return break New NewArray Console WriteLine Print"; //Add "Print" --> Lab A
-
-        //method public that return the token reserved words
-        public List<string> Reserved_Words()
+        public override string ToString()
         {
-            return Reserved_Method();
+            if (Error == "")
+                return $"{cadena}\t\tline {linea} cols {column_I}-{column_F} is {description}\n";
+            else if (Error == "Error" && description == "Error")// && description != "Identifier length exceeds 31 characters")
+                return $"*** {Error} line {linea}. *** EOF in unfinished '{cadena}'\n";
+            else
+                return $"*** {Error} line {linea}. {description} '{cadena}'\n";           
         }
 
-        //method public that return the token reserved words
-        public List<string> Operators_Words()
+        public int CompareTo(object obj)
         {
-            return Operators_Method();
+            var comparer = (Token) obj;
+            return IndexMatch.CompareTo(comparer.IndexMatch);
         }
 
-        #endregion
-        //---------------------------------------FUNCTIONS PRIVATE---------------------------------------
-
-        #region FUNCTIONS PRIVATE
-
-        //method private that divide the words of the sentence
-        private List<string> Reserved_Method()
+        public static Comparison<Token> OrderByIndex = delegate(Token ty1, Token ty2)
         {
-            List<string> words = new List<string>(); //create list, save the data
-            char delimiter = ' '; //delimiter for split words
-            string[] values = sentence.Split(delimiter);
-            //scroll in the array 
-            for (int i = 0; i < values.Length; i++)
-                words.Add(values[i]);
-
-            return words; //return the list completed
-        }
-
-        //method private that divide the words of the operators
-        private List<string> Operators_Method()
-        {
-            List<string> words = new List<string>(); //create list, save the data
-            char delimiter = ' '; //delimiter for split words
-            string[] values = operators.Split(delimiter);
-            //scroll in the array 
-            for (int i = 0; i < values.Length; i++)
-                words.Add(values[i]);
-
-            return words; //return the list completed
-        }
-
-        #endregion
-
+            return ty1.CompareTo(ty2);
+        };
     }
 }

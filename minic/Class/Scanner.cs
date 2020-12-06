@@ -15,8 +15,8 @@ namespace minic.Class
         #region FUNCTIONS PUBLIC
 
         //List for save data the lexic analysis
-        public List<Type> NewFile = new List<Type>();
-        Token t = new Token(); //call the tokens
+        public List<Token> NewFile = new List<Token>();
+        Operadores_fase1 t = new Operadores_fase1(); //call the tokens
         public int column = 1;
         public int row = 0;
         public bool flag_comment = false; //if there is an open comment --> true
@@ -32,7 +32,7 @@ namespace minic.Class
         private string hexaDecimal = @"^(0x|0X)[0-9]*[a-fA-F]*$";
 
         //method public for scanner the file
-        public List<Type> Scanner_Lexic(string[] file)
+        public List<Token> Scanner_Lexic(string[] file)
         {
             //scrolll the array
             Scanner_Private(file);
@@ -69,22 +69,23 @@ namespace minic.Class
                 column = 1; //restart             
             }
             if (flag_comment == true) //check the error EOF
-                Insert_Error("comment",row,"Error");
+                Insert_Error("comment", row, "Error");
         }
 
         //method for first filter, parameters words and line
         private void Filter_First(string[] word, int line)
         {
             //call the tokens
-            List<string> ope = t.Operators_Words();
-            string operators1 = Operator_A(ope,1); //double oerator like '==', '!=', '||'
-            string operators2 = Operator_A(ope, 2); //single operators like '=', '*', '+', ';'.
+            var ope = t.Operators_Words();
+            var operators1 = Operator_A(ope, 1); //double oerator like '==', '!=', '||'
+            var operators2 = Operator_A(ope, 2); //single operators like '=', '*', '+', ';'.
+
             //scroll the array word by word
             for (int i = 0; i < word.Length; i++)
             {
                 //only letters
                 if (Regex.IsMatch(word[i], onlyLetters))
-                { 
+                {
                     //if not is reserved word
                     if (!Is_ReservedWord(word[i], line))
                     {
@@ -100,23 +101,23 @@ namespace minic.Class
                         }
                     }
                 }
-                
+
                 //only numbers --> decimal constant
                 else if (Regex.IsMatch(word[i], decimalConst))
                 {
                     Insert_Word(word[i], line, "T_IntConst (value = " + word[i] + ")");
                 }
-                else if (Regex.IsMatch(word[i], doubleGeneral )) //double consts or exp numbers
+                else if (Regex.IsMatch(word[i], doubleGeneral)) //double consts or exp numbers
                 {
                     if (Regex.IsMatch(word[i], doubleFloat)) //Only double, with decimal
                     {
                         Insert_Word(word[i], line, "T_DoubleConst (value = " + word[i] + ")");
                     }
-                    else if(Regex.IsMatch(word[i], doubleFloat2)) //without decimals
+                    else if (Regex.IsMatch(word[i], doubleFloat2)) //without decimals
                     {
                         Insert_Word(word[i], line, "T_DoubleConst (value = " + word[i] + "00)");
                     }
-                    else if(Regex.IsMatch(word[i], expS)) //Exp without '+-'
+                    else if (Regex.IsMatch(word[i], expS)) //Exp without '+-'
                     {
                         if (word[i].Contains("E"))
                         {
@@ -131,10 +132,10 @@ namespace minic.Class
                     {
                         Insert_Word(word[i], line, "T_DoubleExpConst (value = " + word[i] + ")");
                     }
-                    
+
                 }
                 //only operator (1)
-                else if (Regex.IsMatch(word[i], @"^(" + operators1 +")$"))
+                else if (Regex.IsMatch(word[i], @"^(" + operators1 + ")$"))
                 {
                     Insert_Word(word[i], line, "T_Operator");
                 }
@@ -179,7 +180,7 @@ namespace minic.Class
             RemoveRecurrence(ref copy, listDouble);
 
             var operators1 = Operator_A(t.Operators_Words(), 1);
-            var listOperators = Regex.Matches(copy, @""+ operators1 +""); //find douBles operators like == != () {} <= >=
+            var listOperators = Regex.Matches(copy, @"" + operators1 + ""); //find douBles operators like == != () {} <= >=
             RemoveRecurrence(ref copy, listOperators);
 
             var listBoolean = Regex.Matches(copy, @"(true|false)"); //find boolean values.
@@ -198,7 +199,7 @@ namespace minic.Class
             foreach (var tokenType in listTokens)
             {
                 tokenType.column_I = column;
-                tokenType.column_F = tokenType.column_I + (tokenType.cadena.Length-1);
+                tokenType.column_F = tokenType.column_I + (tokenType.cadena.Length - 1);
                 column = tokenType.column_F + 1;
 
                 if (tokenType.description == "Identifier length exceeds 31 characters")
@@ -210,15 +211,15 @@ namespace minic.Class
             }
         }
 
-        private List<Type> FindIndex(string word, int line, MatchCollection listReserved, MatchCollection listHexaDecimals, MatchCollection listExp, MatchCollection listDouble, MatchCollection listOperators, MatchCollection listOperators2, MatchCollection listDecimals, MatchCollection listBoolean, MatchCollection listOnlyWords, string copy)
+        private List<Token> FindIndex(string word, int line, MatchCollection listReserved, MatchCollection listHexaDecimals, MatchCollection listExp, MatchCollection listDouble, MatchCollection listOperators, MatchCollection listOperators2, MatchCollection listDecimals, MatchCollection listBoolean, MatchCollection listOnlyWords, string copy)
         {
-            var listTokens = new List<Type>();
+            var listTokens = new List<Token>();
 
             if (listReserved.Count != 0)
             {
                 foreach (Match match1 in listReserved)
                 {
-                    Type newType = new Type();
+                    Token newType = new Token();
                     newType.cadena = match1.Value;
                     newType.linea = line;
                     newType.Error = ""; //dont exist error
@@ -232,7 +233,7 @@ namespace minic.Class
             {
                 foreach (Match match2 in listHexaDecimals)
                 {
-                    Type newType = new Type();
+                    Token newType = new Token();
                     newType.cadena = match2.Value;
                     newType.linea = line;
                     newType.Error = ""; //dont exist error
@@ -246,7 +247,7 @@ namespace minic.Class
             {
                 foreach (Match match3 in listExp)
                 {
-                    Type newType = new Type();
+                    Token newType = new Token();
                     newType.cadena = match3.Value;
                     newType.linea = line;
                     newType.Error = ""; //dont exist error
@@ -276,7 +277,7 @@ namespace minic.Class
             {
                 foreach (Match match4 in listDouble)
                 {
-                    Type newType = new Type();
+                    Token newType = new Token();
                     newType.cadena = match4.Value;
                     newType.linea = line;
                     newType.Error = ""; //dont exist error
@@ -298,7 +299,7 @@ namespace minic.Class
             {
                 foreach (Match match5 in listOperators)
                 {
-                    Type newType = new Type();
+                    Token newType = new Token();
                     newType.cadena = match5.Value;
                     newType.linea = line;
                     newType.Error = ""; //dont exist error
@@ -312,7 +313,7 @@ namespace minic.Class
             {
                 foreach (Match match6 in listOperators2)
                 {
-                    Type newType = new Type();
+                    Token newType = new Token();
                     newType.cadena = match6.Value;
                     newType.linea = line;
                     newType.Error = ""; //dont exist error
@@ -326,7 +327,7 @@ namespace minic.Class
             {
                 foreach (Match match7 in listDecimals)
                 {
-                    Type newType = new Type();
+                    Token newType = new Token();
                     newType.cadena = match7.Value;
                     newType.linea = line;
                     newType.Error = ""; //dont exist error
@@ -340,7 +341,7 @@ namespace minic.Class
             {
                 foreach (Match match8 in listBoolean)
                 {
-                    Type newType = new Type();
+                    Token newType = new Token();
                     newType.cadena = match8.Value;
                     newType.linea = line;
                     newType.Error = ""; //dont exist error
@@ -354,18 +355,18 @@ namespace minic.Class
             {
                 foreach (Match match9 in listOnlyWords)
                 {
-                    Type newType = new Type();
+                    Token newType = new Token();
 
                     if (match9.Value.Length > 30)
                     {
-                        newType.cadena = match9.Value.Substring(0,31);
+                        newType.cadena = match9.Value.Substring(0, 31);
                         newType.linea = line;
                         newType.Error = ""; //dont exist error
                         newType.IndexMatch = match9.Index;
                         newType.description = "T_Identifier";
 
 
-                        var errorToken = new Type();
+                        var errorToken = new Token();
                         errorToken.cadena = match9.Value.Substring(31, (match9.Value.Length - 31));
                         errorToken.linea = line;
                         errorToken.Error = "Error";
@@ -380,20 +381,20 @@ namespace minic.Class
                         newType.Error = ""; //dont exist error
                         newType.IndexMatch = match9.Index;
                         newType.description = "T_Identifier";
-                        
+
                     }
 
                     listTokens.Add(newType);
                 }
             }
 
-            if (copy.Length >=1)
+            if (copy.Length >= 1)
             {
                 foreach (var item in copy.Split(' '))
                 {
                     if (item != "" && !(item.Contains("\t")) && (item != "numbe"))
                     {
-                        Type newType = new Type();
+                        Token newType = new Token();
                         newType.cadena = item;
                         newType.linea = line;
                         newType.Error = "Error"; //dont exist error
@@ -404,7 +405,7 @@ namespace minic.Class
                 }
             }
 
-            listTokens.Sort(Type.OrderByIndex);
+            listTokens.Sort(Token.OrderByIndex);
             return listTokens;
         }
 
@@ -415,18 +416,16 @@ namespace minic.Class
             switch (type)
             {
                 case "string":
-                    Case_String(word,line);
+                    Case_String(word, line);
                     break;
                 case "commentary":
-                    Case_Commentary(word,line);
+                    Case_Commentary(word, line);
                     break;
                 case "commentary2":
-                    Case_Commentary2(word,line);
+                    Case_Commentary2(word, line);
                     break;
                 case "Error commentary":
                     Case_ErrorComentary(word, line);
-                    break;
-                default:
                     break;
             }
         }
@@ -434,43 +433,30 @@ namespace minic.Class
         //method to know if it is a reserved word
         private bool Is_ReservedWord(string w, int line)
         {
-            //call the tokens
-            List<string> reser = t.Reserved_Words();
-            string reserved = Reserved_A(reser);
+            var reserved = Reserved_A(t.Reserved_Words());
 
             if (Regex.IsMatch(w, @"^(" + reserved + ")$"))
             {
                 Insert_Word(w, line, "T_" + w);
                 return true;
             }
-            else
-                return false;
+            return false;
         }
 
         //method to know if it is a string constant
         private void Is_String(string word, int line)
         {
-            //first error --> string null
-            //if (word.Length < 3)
-            //{
-            //    Insert_Error("'" + word + "'",line, "String Null:");//in this case the string is  --> ""
-            //}
-            //else 
-            //{
-                // Check character in string
-                if (!word.Contains(@"\n"))
-                    Insert_Word(word,line, "T_StringConstant (value = "+ word +")");
-                else
-                    Insert_Error(word, line, "Unrecognized char: 'new line'");//in this case the string is  --> "\n"
-            //}
-
+            if (!word.Contains(@"\n"))
+                Insert_Word(word, line, "T_StringConstant (value = " + word + ")");
+            else
+                Insert_Error(word, line, "Unrecognized char: 'new line'");
         }
 
         //method for insert in list type
         private void Insert_Word(string word, int line, string type)
         {
             //insert into TYPE list
-            Type newType = new Type();
+            Token newType = new Token();
             newType.cadena = word;
             newType.linea = line;
             newType.Error = ""; //dont exist error
@@ -480,18 +466,17 @@ namespace minic.Class
             column = column + 2; //space + next character
             newType.description = type;
             NewFile.Add(newType);
-
         }
 
         //method to know if it is necessary to analyze by line
         private string Is_Line(string line)
         {
-            char[] array_line = line.ToArray(); //line character by character
-            //scroll the array
+            var array_line = line.ToArray();
+
             for (int i = 0; i < array_line.Length; i++)
             {
                 //if is a line commentary
-                if (i < array_line.Length-1 && array_line[i] == '/' && array_line[i + 1] == '*')
+                if (i < array_line.Length - 1 && array_line[i] == '/' && array_line[i + 1] == '*')
                     return "commentary2";
                 //if is a begin commentary
                 else if (i < array_line.Length - 1 && array_line[i] == '/' && array_line[i + 1] == '/')
@@ -509,12 +494,12 @@ namespace minic.Class
         //method for check that the string has the correct format
         private void Case_String(string word, int line) //characters
         {
-            string before_String = "";
-            string now_String = "";
-            string after_String = "";
-            bool flag_bs = false; //before string
-            bool flag_as = false; //after string
-            char[] word_A = word.ToArray();
+            var before_String = string.Empty;
+            var now_String = string.Empty;
+            var after_String = string.Empty;
+            var flag_bs = false; //before string
+            var flag_as = false; //after string
+            var word_A = word.ToArray();
 
             //scroll the line
             for (int i = 0; i < word_A.Length; i++)
@@ -540,19 +525,19 @@ namespace minic.Class
             if (before_String != "")
             {
                 // analisys before string
-                string[] word2 = Regex.Split(before_String, " ");
+                var word2 = Regex.Split(before_String, " ");
                 Filter_First(word2, row); //first filter for word by word, array the word  
-            }                 
+            }
             //if is string close
             if (flag_as == false)
             {
                 //ERROR dont close string
-                Insert_Error("Error String",line,"Error dont close string"); //wait 
+                Insert_Error("Error String", line, "Error dont close string"); //wait 
             }
-            else 
+            else
             {
-                //analisys now
-                Is_String(now_String,line);
+                Is_String(now_String, line);
+
                 //analysis after string
                 //check if it is not comment or string
                 string type_line = Is_Line(after_String);
@@ -564,7 +549,6 @@ namespace minic.Class
                     Filter_First(b_word, line);
                 }
             }
-            // hay que tomar como ejemplo una cadena de este tipo --> string c = "hola" + "mundo";
         }
 
         //method for array the operator / array the reserved word
@@ -674,25 +658,27 @@ namespace minic.Class
                 }
             }
         }
-        
+
         //method for case commentary in method scanner line
         private void Case_Commentary(string word, int line)
         {
             //check that the commentary has the correct format
-            char[] Word_A = word.ToArray();
-            string before_Comment = "";
-            int i = 0;
+            var Word_A = word.ToArray();
+            var before_Comment = "";
+            var i = 0;
+
             while (Word_A[i] != '/' || Word_A[i + 1] != '/')
             {
                 before_Comment = before_Comment + Word_A[i];
                 i++;
             }
+            
             //call the method for analisys the string before
             if (before_Comment != "")
             {
-                string[] b_word = Regex.Split(before_Comment, " ");//parse string separately
+                var b_word = Regex.Split(before_Comment, " ");//parse string separately
                 Filter_First(b_word, line);
-            }         
+            }
         }
 
         //method for case commentary2 in method scanner line
@@ -707,15 +693,15 @@ namespace minic.Class
             //Scroll the line
             for (int i = 0; i < word.Length; i++)
             {
-                if (i < word.Length-1 && Word_A2[i] != '/' && Word_A2[i + 1] != '*' && flag_before == false && flag_after == false)
+                if (i < word.Length - 1 && Word_A2[i] != '/' && Word_A2[i + 1] != '*' && flag_before == false && flag_after == false)
                     before_Comment2 = before_Comment2 + Word_A2[i];
                 else if (flag_before == false && Word_A2[i] == '/' && Word_A2[i + 1] == '*' && flag_after == false)
                     flag_before = true;
-                else if (i < word.Length - 1 &&  Word_A2[i] == '*' && Word_A2[i + 1] == '/' && flag_after == false)
+                else if (i < word.Length - 1 && Word_A2[i] == '*' && Word_A2[i + 1] == '/' && flag_after == false)
                 {
                     flag_after = true;
                     i++; //quit character '/'
-                }                   
+                }
                 else if (flag_before == true && flag_after == true)
                     after_Comment2 = after_Comment2 + Word_A2[i];
             }
@@ -756,7 +742,7 @@ namespace minic.Class
             //scroll
             for (int i = 0; i < word_A.Length; i++)
             {
-                if (word_A[i] == '*' && word_A[i+1] == '/')
+                if (word_A[i] == '*' && word_A[i + 1] == '/')
                 {
                     flag = true;
                     i++;
@@ -780,8 +766,9 @@ namespace minic.Class
                 }
             }
             //insert error
-            Insert_Error(now,line, "Error: End of comment unpaired");
-            column = column + 2;//by now
+            Insert_Error(now, line, "Error: End of comment unpaired");
+            column = column + 2;
+            
             if (after != "")
             {
                 //check if it is not comment or string
@@ -804,11 +791,11 @@ namespace minic.Class
             //scroll the string
             for (int i = 0; i < word_A.Length; i++)
             {
-                if (i < word_A.Length - 1 && word_A[i] == '*' && word_A[i+1] == '/' )
+                if (i < word_A.Length - 1 && word_A[i] == '*' && word_A[i + 1] == '/')
                 {
                     flag_comment = false;
                     i++;//next character analysis
-                }               
+                }
                 else if (flag_comment == false)
                     after_commentary = after_commentary + word_A[i];
             }
@@ -822,7 +809,7 @@ namespace minic.Class
                 {
                     string[] b_word = Regex.Split(after_commentary, " ");//parse string separately
                     Filter_First(b_word, line);
-                }           
+                }
             }
         }
 
@@ -830,7 +817,7 @@ namespace minic.Class
         private void Insert_Error(string word, int line, string type)
         {
             //insert into TYPE list
-            Type newType = new Type();
+            Token newType = new Token();
             newType.cadena = word;
             newType.linea = line;
             newType.Error = "Error"; //dont exist error
@@ -839,8 +826,6 @@ namespace minic.Class
             newType.description = type; //In this case for diferent other case use description
             NewFile.Add(newType);
         }
-
         #endregion
     }
-
 }

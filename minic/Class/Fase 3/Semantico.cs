@@ -15,7 +15,7 @@ namespace minic.Class.Fase_3
         Arbol x = new Arbol();
 
         //metodo publico para hacer el parseo
-        public string Tabla_Simbolos(List<Type> tokens, string path)
+        public string Tabla_Simbolos(List<Token> tokens, string path)
         {
             string error = "";
             error = Flujo(tokens, path);
@@ -28,7 +28,7 @@ namespace minic.Class.Fase_3
         #region private functions
 
         //Flujo que llevara para la lectura de datos
-        private string Flujo(List<Type> tokens, string path) 
+        private string Flujo(List<Token> tokens, string path) 
         {
             string error = "";
 
@@ -584,7 +584,7 @@ namespace minic.Class.Fase_3
         #endregion
 
 
-        private void EscribirTabla(List<Type> tokens, string path)
+        private void EscribirTabla(List<Token> tokens, string path)
         {
             List < TablaS > tabla = new List<TablaS>();
 

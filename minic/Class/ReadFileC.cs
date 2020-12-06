@@ -27,16 +27,18 @@ namespace minic.Class
         #region WriteFile
 
         //Method write the file and save
-        public void WriteFile(List<Type> list, string PathF)
+        public void WriteFile(List<Token> list, string PathF)
         {
-            string NewPath = NewPath_File(PathF);
-            NewPath = NewPath + "out";
-            TextWriter write = new StreamWriter(NewPath);
+            var NewPath = NewPath_File(PathF) + "out";
+
+            var write = new StreamWriter(NewPath);
+
             foreach (var item in list)
             {
-                write.WriteLine(item.ToString());//override
+                write.WriteLine(item.ToString());
             }
-            write.Close(); //close the file
+
+            write.Close();
         }
         #endregion
 
@@ -46,9 +48,10 @@ namespace minic.Class
 
         private string NewPath_File(string path)
         {
-            char[] path_A = path.ToArray();
-            string new_Path = string.Empty;
-            bool flag_point = false;
+            var path_A = path.ToArray();
+            var new_Path = string.Empty;
+            var flag_point = false;
+
             for (int i = path_A.Length-1; i > -1 ; i--)
             {
                 if (path_A[i] == '.' && flag_point == false)
@@ -56,12 +59,11 @@ namespace minic.Class
                 if (flag_point == true)
                     new_Path = new_Path + path_A[i];
             }
-            char[] revers = new_Path.ToCharArray(); //hola --> aloh
+
+            var revers = new_Path.ToCharArray(); //hola --> aloh
             Array.Reverse(revers);
             return new string(revers);
         }
-
         #endregion
-
     }
 }

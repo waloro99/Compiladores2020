@@ -12,8 +12,8 @@ namespace minic.Class
     public class ASDRecursivo
     {
         //---------------------------------------FUNCTIONS PUBLIC---------------------------------------
-        public List<Type> t = new List<Type>(); //list with tokens
-        public Type token = new Type(); //value the lookahad
+        public List<Token> t = new List<Token>(); //list with tokens
+        public Token token = new Token(); //value the lookahad
         public string lookahad = string.Empty; //var global
         public string Msg_Error = string.Empty;
         public int x = -1; //scroll var
@@ -23,7 +23,7 @@ namespace minic.Class
         #region FUNCTIONS PUBLICS
 
         //method public 
-        public string ASDRecursivo_F(List<Type> tokens)
+        public string ASDRecursivo_F(List<Token> tokens)
         {
             t = tokens;
             ASDR_Flow();
@@ -62,7 +62,7 @@ namespace minic.Class
             return l;
         }
 
-        private string F_Lookahad(Type T_token)
+        private string F_Lookahad(Token T_token)
         {
             if (T_token.description.Contains("T_Bool"))
             {

@@ -86,8 +86,8 @@
     <Compile Include="Class\Fase 3\TablaS.cs" />
     <Compile Include="Class\ReadFileC.cs" />
     <Compile Include="Class\Scanner.cs" />
+    <Compile Include="Class\Operadores_fase1.cs" />
     <Compile Include="Class\Token.cs" />
-    <Compile Include="Class\Type.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

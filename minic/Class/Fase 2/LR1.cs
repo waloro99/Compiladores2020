@@ -204,7 +204,7 @@ namespace minic.Class.Fase_2
             return true;
         }
 
-        public string GetAction(int state, Type type, ref List<string> listaOpciones)
+        public string GetAction(int state, Token type, ref List<string> listaOpciones)
         {
             var itemtoSearch = "";
             var action = "-1";

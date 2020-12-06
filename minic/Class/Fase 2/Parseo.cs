@@ -10,10 +10,10 @@ namespace minic.Class.Fase_2
     {
 
         public Stack<int> pila = new Stack<int>(); // la pila guarda los estados de la tabla de analisis
-        public List<Type> simbolo = new List<Type>(); // aqui guarda los datos que se van ingresando
+        public List<Token> simbolo = new List<Token>(); // aqui guarda los datos que se van ingresando
         public Stack<string> accion = new Stack<string>(); //se va guardando las acciones que va realizando los parseos
         public string errores; //guarda los valores encontrados
-        public Queue<Type> entrada =  new Queue<Type>();
+        public Queue<Token> entrada =  new Queue<Token>();
         public List<string> listOpciones = new List<string>(); //opciones por si hay conflictos en los estados de la tabla de LR1
         public Queue<string> OpcionesCola = new Queue<string>();//para mover dentro de las estructuras
         //banderas para controlar el flujo
@@ -24,7 +24,7 @@ namespace minic.Class.Fase_2
         #region public functions
 
         //metodo publico para hacer el parseo
-        public string Tabla_parseo(List<Type> tokens)
+        public string Tabla_parseo(List<Token> tokens)
         {
             string error = "";
             error = Flujo(tokens);
@@ -37,7 +37,7 @@ namespace minic.Class.Fase_2
         #region private functions
 
         //metodo para llevar el flujo del parseo
-        private string Flujo(List<Type> tokens)
+        private string Flujo(List<Token> tokens)
         {
             string error = "";
             //Agrego el ultimo token para saber fin de la cadena que seria $
@@ -68,7 +68,7 @@ namespace minic.Class.Fase_2
                     //se sabe que cuando hay una reduccion se continua un ir_A
                     f_reducir = false;
                     p = pila.Peek(); //obtenemos el top de la pila
-                    Type a = Ir_A();
+                    Token a = Ir_A();
                     acc = MetodoFalso(p, a); //obtenemos el ultimo valor de Simbolo
                     datos = SplitAction(acc);//obtiene accion y estado
                     accion.Push(datos[0]); //guardo la accion
@@ -121,7 +121,7 @@ namespace minic.Class.Fase_2
 
                 else if (f_error == true && f_opc == false)
                 {
-                    Type n_error = new Type();
+                    Token n_error = new Token();
                     n_error = entrada.Peek();
                     error = "Linea: "+ n_error.linea +" Columna: "+ n_error.column_I +" - "+ n_error.column_F + " Simbolo: "+ n_error.cadena +"    Error: No se esperaba este simbolo.";
                     entrada.Clear();
@@ -146,10 +146,10 @@ namespace minic.Class.Fase_2
         }
 
         //metodo para agregar un nuevo token a la lista que se utilizara despues
-        private List<Type> AddLastString(List<Type> tokens)
+        private List<Token> AddLastString(List<Token> tokens)
         {
-            List<Type> res = tokens;
-            Type newType = new Type();
+            List<Token> res = tokens;
+            Token newType = new Token();
             newType.cadena = "$";
             newType.linea = 0;
             newType.column_I = 0;
@@ -162,9 +162,9 @@ namespace minic.Class.Fase_2
         }
 
         //Metodo para llenar la cola de las entradas
-        private Queue<Type> LlenarCola(List<Type> tokens)
+        private Queue<Token> LlenarCola(List<Token> tokens)
         {
-            Queue<Type> res = new Queue<Type>();
+            Queue<Token> res = new Queue<Token>();
             foreach (var item in tokens)
             {
                 res.Enqueue(item);
@@ -173,7 +173,7 @@ namespace minic.Class.Fase_2
         }
 
         //metodo que devuelve los datos que se realizaran para el parseo -- aqui debe de decirnos si hay error
-        private string MetodoFalso(int pila, Type entrada) 
+        private string MetodoFalso(int pila, Token entrada) 
         {
             LR1 lr1 = new LR1();
             string res = lr1.GetAction(pila, entrada,ref listOpciones);
@@ -246,7 +246,7 @@ namespace minic.Class.Fase_2
             }
             
             //Se agrega el simbolo no terminal a la lista de simbolos
-            Type t = new Type();
+            Token t = new Token();
             t.cadena = produccion.Padre;
             t.linea = 0;
             t.column_I = 0;
@@ -260,9 +260,9 @@ namespace minic.Class.Fase_2
         }
 
         //metodo para obtener el ultimo de la lista simbolo
-        private Type Ir_A()
+        private Token Ir_A()
         {
-            Type last = new Type();
+            Token last = new Token();
             foreach (var item in simbolo)
             {
                 last = item;
