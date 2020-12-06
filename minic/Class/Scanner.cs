@@ -10,7 +10,7 @@ namespace minic.Class
     public class Scanner
     {
 
-        //---------------------------------------FUNCTIONS PUBLIC---------------------------------------
+        //---------------------------------------PUBLIC FUNCTIONS---------------------------------------
 
         #region FUNCTIONS PUBLIC
 
@@ -41,9 +41,9 @@ namespace minic.Class
 
 
         #endregion
-        //---------------------------------------FUNCTIONS PRIVATE---------------------------------------
+        //---------------------------------------PRIVATE FUNCTIONS---------------------------------------
 
-        #region FUNCTIONS PRIVATE
+        #region PRIVATE FUNCTIONS
 
         //method for analysis the file
         private void Scanner_Private(string[] file)
@@ -179,7 +179,7 @@ namespace minic.Class
             RemoveRecurrence(ref copy, listDouble);
 
             var operators1 = Operator_A(t.Operators_Words(), 1);
-            var listOperators = Regex.Matches(copy, @""+ operators1 +""); //find dobules operators like == != () {} <= >=
+            var listOperators = Regex.Matches(copy, @""+ operators1 +""); //find douBles operators like == != () {} <= >=
             RemoveRecurrence(ref copy, listOperators);
 
             var listBoolean = Regex.Matches(copy, @"(true|false)"); //find boolean values.
