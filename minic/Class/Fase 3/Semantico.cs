@@ -44,15 +44,11 @@ namespace minic.Class.Fase_3
                 }
             }
 
-            EscribirTabla(tokens, path); //Pendiente de esto para eliminarlo
+            EscribirTabla(tokens, path);
 
             return error;
         }
 
-        //Metodo para mostrar la tabla de simbolos
-
-
-        //Metodo
         private void MatchRule(TablaS dato) 
         {
             switch (dato.token.description)
@@ -168,12 +164,12 @@ namespace minic.Class.Fase_3
             }
         }
 
-        //Reglas Semanticas
         #region Reglas Semanticas
 
         private void Match_Constant() 
         {
             string opc = "";
+
             switch (opc)
             {
                 case "intConstant":
@@ -185,8 +181,6 @@ namespace minic.Class.Fase_3
                 case "stringConstant":
                     break;
                 case "null":
-                    break;
-                default:
                     break;
             }
         }
@@ -200,13 +194,12 @@ namespace minic.Class.Fase_3
                     break;
                 case "Expr":
                     break;
-                default:
-                    break;
             }
         }
         private void Match_Expr()
         {
             string opc = "";
+
             switch (opc)
             {
                 case "Constant":
@@ -241,8 +234,6 @@ namespace minic.Class.Fase_3
                     break;
                 case "New":
                     break;
-                default:
-                    break;
             }
         }
 
@@ -252,8 +243,6 @@ namespace minic.Class.Fase_3
             switch (opc)
             {
                 case ",":
-                    break;
-                default:
                     break;
             }
 
@@ -589,7 +578,7 @@ namespace minic.Class.Fase_3
                 var n = new TablaS(item);
                 n.type = "int";
 
-                if (n.token.description == "T_identifier" || n.token.description == "T_int" || n.token.description == "T_double" || n.token.description == "T_String")
+                if (n.token.description == "T_Identifier")
                 {
                     tabla.Add(n);
                 }
