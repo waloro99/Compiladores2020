@@ -175,7 +175,7 @@ namespace minic.Class
             RemoveRecurrence(ref copy, listDouble);
 
             var operators1 = Operator_A(t.Operators_Words(), 1);
-            var listOperators = Regex.Matches(copy, @"" + operators1 + ""); //find douBles operators like == != () {} <= >=
+            var listOperators = Regex.Matches(copy, @"" + operators1 + ""); //find doubles operators like == != () {} <= >=
             RemoveRecurrence(ref copy, listOperators);
 
             var listBoolean = Regex.Matches(copy, @"(true|false)"); //find boolean values.

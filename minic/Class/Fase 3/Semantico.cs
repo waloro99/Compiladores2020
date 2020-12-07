@@ -576,7 +576,18 @@ namespace minic.Class.Fase_3
             foreach (var item in tokens)
             {
                 var n = new TablaS(item);
-                n.type = "int";
+
+                var rnd = new Random();
+                var tp = rnd.Next(0,1);
+
+                if (tp == 0)
+                {
+                    n.type = "int";
+                }
+                else if (tp == 1)
+                {
+                    n.type = "string";
+                }
 
                 if (n.token.description == "T_Identifier")
                 {
