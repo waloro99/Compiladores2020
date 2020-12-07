@@ -19,7 +19,7 @@ namespace minic.Class.Fase_3
 
         public override string ToString()
         {
-            return $"{token.description}\t\tline {token.linea} type {type} val {val}\n";
+            return $"token: {token.cadena}\t\t{token.description}\t\tline: {token.linea} type: {type} val: {val}\n";
         }
     }
 }

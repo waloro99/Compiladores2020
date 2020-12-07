@@ -122,7 +122,7 @@ namespace minic
                 }
 
                 //if (flag_error == false)
-                //    MessageBox.Show("El archivo se analizó correctamente.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //    MessageBox.Show("Se terminó de analizar el archivo", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 //else
                 //{
                 //    MessageBox.Show(errors, "Error:", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -130,6 +130,8 @@ namespace minic
                 //}
                 //write the file
                 rf.WriteFile(FileScanner,PathFile);
+
+                MessageBox.Show("Se terminó de analizar el archivo", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
         #endregion

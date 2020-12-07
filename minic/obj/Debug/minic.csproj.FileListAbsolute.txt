@@ -49,3 +49,4 @@ C:\Users\ricar\Desktop\Compiladores2020\minic\obj\Debug\minic.exe.manifest
 C:\Users\ricar\Desktop\Compiladores2020\minic\obj\Debug\minic.application
 C:\Users\ricar\Desktop\Compiladores2020\minic\obj\Debug\minic.exe
 C:\Users\ricar\Desktop\Compiladores2020\minic\obj\Debug\minic.pdb
+C:\Users\ricar\Desktop\Compiladores2020\minic\obj\Debug\minic.csprojAssemblyReference.cache
