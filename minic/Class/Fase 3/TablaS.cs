@@ -10,8 +10,6 @@ namespace minic.Class.Fase_3
 
         public string type { get; set; } //atributo tipo
 
-        public string error { get; set; } //Si hay error
-
         public TablaS(Token tk)
         {
             token = tk;
