@@ -17,8 +17,7 @@ namespace minic.Class.Fase_3
         //metodo publico para hacer el parseo
         public string Tabla_Simbolos(List<Token> tokens, string path)
         {
-            string error = "";
-            error = Flujo(tokens, path);
+            var error = Flujo(tokens, path);
             return error;
         }
         #endregion
@@ -30,7 +29,7 @@ namespace minic.Class.Fase_3
         //Flujo que llevara para la lectura de datos
         private string Flujo(List<Token> tokens, string path) 
         {
-            string error = "";
+            var error = string.Empty;
 
             if (x.Raiz != null)
             {
@@ -44,9 +43,8 @@ namespace minic.Class.Fase_3
                     x.Recorrido(x.Raiz, item);
                 }
             }
-            
 
-            EscribirTabla(tokens, path);
+            EscribirTabla(tokens, path); //Pendiente de esto para eliminarlo
 
             return error;
         }
@@ -166,8 +164,6 @@ namespace minic.Class.Fase_3
                     break;
                 case "Program'":
                     Match_ProgramP();
-                    break;
-                default:
                     break;
             }
         }
@@ -585,49 +581,49 @@ namespace minic.Class.Fase_3
 
 
         private void EscribirTabla(List<Token> tokens, string path)
-        {
-            List < TablaS > tabla = new List<TablaS>();
+        { 
+            var tabla = new List<TablaS>();
 
             foreach (var item in tokens)
             {
-                TablaS n = new TablaS(item);
+                var n = new TablaS(item);
                 n.type = "int";
+
                 if (n.token.description == "T_identifier" || n.token.description == "T_int" || n.token.description == "T_double" || n.token.description == "T_String")
                 {
                     tabla.Add(n);
                 }
-                
             }
 
-            string NewPath = NewPath_File(path);
-            NewPath = NewPath + "tabla";
-            TextWriter write = new StreamWriter(NewPath);
+            var NewPath = NewPath_File(path) + "tabla";
+
+            var write = new StreamWriter(NewPath);
+
             foreach (var item in tabla)
             {
-                write.WriteLine(item.ToString());//override
+                write.WriteLine(item.ToString());
             }
-            write.Close(); //close the file
-
-
+            write.Close();
         }
 
         private string NewPath_File(string path)
         {
-            char[] path_A = path.ToArray();
-            string new_Path = string.Empty;
-            bool flag_point = false;
+            var path_A = path.ToArray();
+            var new_Path = string.Empty;
+            var flag_point = false;
+
             for (int i = path_A.Length - 1; i > -1; i--)
             {
                 if (path_A[i] == '.' && flag_point == false)
                     flag_point = true;
-                if (flag_point == true)
+                if (flag_point)
                     new_Path = new_Path + path_A[i];
             }
-            char[] revers = new_Path.ToCharArray(); //hola --> aloh
+            
+            var revers = new_Path.ToCharArray(); //hola --> aloh
             Array.Reverse(revers);
             return new string(revers);
         }
-
         #endregion
     }
 }

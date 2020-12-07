@@ -91,15 +91,15 @@ namespace minic
         public void Lexical_Analysis()
         {
             //instance class
-            ReadFileC rf = new ReadFileC();
-            Scanner s = new Scanner();
+            var rf = new ReadFileC();
+            var s = new Scanner();
 
             //return config start
             button2.Enabled = false;
             textBox1.Enabled = false;
 
             //get data from the all file
-            string[] res = rf.ReadFile(PathFile);
+            var res = rf.ReadFile(PathFile);
 
             //check if it is empty
             if (res.Length == 0)
@@ -108,7 +108,8 @@ namespace minic
             {
                 //method for analysis
                 FileScanner = s.Scanner_Lexic(res);
-                bool flag_error = false;
+
+                var flag_error = false;
                 var errors = string.Empty;
                 //Show errors
                 foreach (var item in FileScanner)
@@ -118,23 +119,19 @@ namespace minic
                         errors += item.ToString();
                         flag_error = true;
                     }
-                       
                 }
 
-                if (flag_error == false)
-                    MessageBox.Show("El archivo se analizó correctamente.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                else
-                {
-                    MessageBox.Show(errors, "Error:", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    MessageBox.Show("El archivo se termino de analizar.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+                //if (flag_error == false)
+                //    MessageBox.Show("El archivo se analizó correctamente.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //else
+                //{
+                //    MessageBox.Show(errors, "Error:", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //    MessageBox.Show("El archivo se termino de analizar.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //}
                 //write the file
                 rf.WriteFile(FileScanner,PathFile);
             }
-
         }
-
-
         #endregion
 
         //---------------------------------------FUNCTIONS PRIVATE--------------------------------------
@@ -164,9 +161,9 @@ namespace minic
         //Method to do Syntactic Analyis  --> PHASE 2
         private void AS_LR1() 
         {
-            Parseo parseo = new Parseo();
+            var parseo = new Parseo();
             //Find Error syntactic analysis
-            string Msg_Error = parseo.Tabla_parseo(FileScanner);
+            var Msg_Error = parseo.Tabla_parseo(FileScanner);
 
             //Show Error Syntactic
 
@@ -176,7 +173,7 @@ namespace minic
             }
             else
             {
-                MessageBox.Show("Correct Sintaxis", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Sintáxis correcta", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
