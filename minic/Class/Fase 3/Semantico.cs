@@ -577,20 +577,28 @@ namespace minic.Class.Fase_3
             {
                 var n = new TablaS(item);
 
-                var rnd = new Random();
-                var tp = rnd.Next(0,1);
-
-                if (tp == 0)
-                {
-                    n.type = "int";
-                }
-                else if (tp == 1)
-                {
-                    n.type = "string";
-                }
-
                 if (n.token.description == "T_Identifier")
                 {
+                    var tp = GetType();
+
+                    if (tp == 1)
+                    {
+                        n.type = "double";
+                        
+                    }
+                    else if (tp == 2)
+                    {
+                        n.type = "int";
+                    }
+                    else if (tp == 0)
+                    {
+                        n.type = "string";
+                    }
+                    else if (tp == 3)
+                    {
+                        n.type = "bool";
+                    }
+
                     tabla.Add(n);
                 }
             }
@@ -624,6 +632,13 @@ namespace minic.Class.Fase_3
             Array.Reverse(revers);
             return new string(revers);
         }
+
+        private int GetType()
+        {
+            var rnd = new Random();
+            return rnd.Next(0, 4);
+        }
+
         #endregion
     }
 }

@@ -120,15 +120,6 @@ namespace minic
                         flag_error = true;
                     }
                 }
-
-                //if (flag_error == false)
-                //    MessageBox.Show("Se terminó de analizar el archivo", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //else
-                //{
-                //    MessageBox.Show(errors, "Error:", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //    MessageBox.Show("El archivo se termino de analizar.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //}
-                //write the file
                 rf.WriteFile(FileScanner,PathFile);
 
                 MessageBox.Show("Se terminó de analizar el archivo", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -169,7 +160,7 @@ namespace minic
 
             //Show Error Syntactic
 
-            if (Msg_Error != "")
+            if (Msg_Error != "" && !Msg_Error.Contains("="))
             {
                 MessageBox.Show(Msg_Error, "Error LR1:", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -193,7 +184,7 @@ namespace minic
             }
             else
             {
-                MessageBox.Show("Semántica correcta", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Se analizó semánticamente", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
         #endregion
